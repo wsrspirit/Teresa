@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Properties>
+		<Property name="logdir">log</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout charset="UTF-8" pattern="%d [%-5p]%c{1}(%L) %m%n" />
+		</Console>
+		<RollingRandomAccessFile name="DebugLog"  append="true" fileName="${logdir}/debug.log" filePattern="${logdir}/debug.log.%d{yyyy-MM-dd}">
+			<ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout charset="UTF-8">
+				<Pattern>%d [%-5p]%C{1}(%L) %m%n</Pattern>
+			</PatternLayout>
+			<TimeBasedTriggeringPolicy />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="ErrorLog" append="true" fileName="${logdir}/error.log" filePattern="${logdir}/error.log.%d{yyyy-MM-dd}">
+			<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout charset="UTF-8">
+				<Pattern>%d [%-5p]%C{1}(%L) %m%n</Pattern>
+			</PatternLayout>
+			<TimeBasedTriggeringPolicy />
+		</RollingRandomAccessFile>
+
+	</Appenders>
+	<loggers>
+		<AsyncRoot level="OFF" includeLocation="true">
+			<AppenderRef ref="DebugLog" />
+			<AppenderRef ref="ErrorLog" />
+			<AppenderRef ref="Console"/>
+		</AsyncRoot>
+
+		<AsyncLogger name="org.springframework" level="ERROR" />
+		<AsyncLogger name="io.netty" level="ERROR" />
+		<AsyncLogger name="httpclient.wire.header" level="ERROR" />
+		<AsyncLogger name="httpclient.wire.content" level="ERROR" />
+		<AsyncLogger name="net.rubyeye" level="ERROR" />
+		<AsyncLogger name="com.google" level="ERROR" />
+		<AsyncLogger name="org.apache.commons.beanutils" level="WARN" />
+		<AsyncLogger name="org.apache.commons.digester" level="WARN" />
+		<AsyncLogger name="org.apache.zookeeper" level="WARN" />
+		<AsyncLogger name="org.apache.commons.configuration.ConfigurationUtils" level="WARN" />
+		<AsyncLogger name="freemarker.cache" level="WARN" />
+	</loggers>
+</Configuration>

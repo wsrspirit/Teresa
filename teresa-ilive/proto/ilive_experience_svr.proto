@@ -1,0 +1,101 @@
+package com.tencent.teresa.pb;
+
+option java_generic_services = false;
+option cc_generic_services = false;
+
+enum BIG_CMD {
+    ILIVE_EXPERIENCE_CMD = 0x7800;
+}
+
+enum SUB_CMD {
+    ADD_EXPERIENCE = 0x1; // 增加经验值
+    GET_EXPERIENCE = 0x2; // 获得经验值接口
+    GET_PRIVILEGE = 0x3; // 获得特权接口
+    COMPLETE_TASK = 0x4; // 完成某项任务
+}
+
+//gift_id: 1-小火箭 2-大火箭
+message PrivilegeGift {
+    required uint32 gift_id = 1;
+    required uint32 gift_num = 2;
+}
+
+//key:"a_p_{uid}"
+message PrivilegeList {
+    repeated uint32 privilege = 1; //特权
+    repeated PrivilegeGift privilege_gift_list = 2;//已赠送礼物id及数量
+}
+
+// key:"a_t_{uid}"
+message TMAnchorTask {
+    optional uint64 anchor_uid = 1; // 主播uid
+    optional uint32 task_lv_a  = 2; // 主播a任务完成标记
+    optional uint32 task_lv_b  = 3; // 主播b任务完成标记
+    optional uint32 task_lv_c  = 4; // 主播c任务完成标记
+    optional uint32 task_lv_d  = 5; // 主播d任务完成标记
+}
+
+// PUSH,命令字0x55
+message LevelPushEvent {
+    optional uint64 anchor_uid = 1; // 主播uid
+    optional uint32 level = 2; // 当前等级
+    optional uint64 experience = 3; // 当前经验值
+    optional uint64 remain_to_upgrade = 4; //升级到下一级所需经验
+}
+
+
+message AddExperienceReq {
+    optional uint64 anchor_uid = 1; // 主播uid
+    optional uint64 increment = 2; // 增加的经验
+    optional uint32 timestamp = 3; // 单位s
+    optional uint32 bid = 4; // 每个调用方来申请，bid+key
+    optional string secret = 5; // md5sum(bid + key + timestamp)
+    optional string order_no = 6; // 订单号，业务方保证单业务唯一
+}
+
+message AddExperienceRsp {
+    optional uint32 result = 1; // 0-成功，20001-签名错误, 20002-加经验内部异常, 20003-uid不是主播，20006-订单重复
+    optional uint64 increment = 2; // 本次增加的经验
+    optional uint64 experience = 3; // 增加后的经验值
+    optional uint32 level = 4; // 增加后的level
+    optional uint64 level_min_exp = 5; //本级开始经验值
+}
+
+message GetExperienceReq {
+    optional uint64 anchor_uid = 1;  // 主播uid
+}
+
+message GetExperienceRsp {
+    optional uint64 anchor_uid = 1; // 主播uid
+    optional uint64 experience = 2; // 经验值
+    optional uint32 level = 3; // 等级
+    optional uint64 remain_to_upgrade = 4; //升级到下一级所需经验
+    optional uint64 level_min_exp = 5; //本级开始经验值
+    optional uint32 result = 10; //0-成功;20003-非主播无经验; 20004-未初始化，使用魅力值；20005-内部错误未找到经验
+}
+
+//1-30级pk 2-40级pk 3-45级pk
+message CompleteTaskReq {
+    optional uint64 anchor_uid = 1; // 主播uid
+    optional uint32 task_id = 2; // 任务对应的id
+}
+
+message CompleteTaskRsp {
+    optional uint32 ret = 1;
+}
+
+message GetPrivilegeReq {
+    optional uint64 anchor_uid = 1;
+}
+
+message GetPrivilegeRsp {
+    repeated uint32 privilege_list = 1;
+    optional uint32 level = 2;
+}
+
+service ilive_experience_svr {
+    rpc ADD_EXPERIENCE (AddExperienceReq) returns (AddExperienceRsp); //增加经验值，活动调用
+    rpc GET_EXPERIENCE (GetExperienceReq) returns (GetExperienceRsp); //查询主播的经验值
+    rpc GET_PRIVILEGE (GetPrivilegeReq) returns (GetPrivilegeRsp); //查询主播拥有特权
+    rpc COMPLETE_TASK (CompleteTaskReq) returns (CompleteTaskRsp); // 完成某项任务
+}

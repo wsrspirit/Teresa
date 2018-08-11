@@ -1,0 +1,67 @@
+package com.tencent.teresa.protocol;
+
+option java_outer_classname="ILive";
+option java_generic_services=false;
+
+//为了兼容原qt协议，tcp和udp格式不同
+//TCP:htons(total_len(2个字节)) +0x28+iLiveRequest/iLiveResponse+0x3  
+//UDP:0x28+htons(total_len(2个字节))+iLiveRequest/iLiveResponse+0x3 
+
+enum ILiveErrorCode
+{
+    ILIVE_EC_OK              = 0; //返回成功
+    ILIVE_EC_REQ_BAD_PKG     = 1; //请求包格式错误
+    ILIVE_EC_CMD_INVALID     = 2; //非法命令字
+    ILIVE_EC_PARAMS_INVALID  = 3; //参数错误
+    ILIVE_EC_INNER_ERROR     = 4; //服务器内部错误
+    ILIVE_EC_TIME_OUT        = 5; //后端超时错误
+    ILIVE_EC_SERVER_BUSY     = 6; //服务器繁忙
+    ILIVE_EC_NO_RIGHT        = 7; //没有权限请求
+    ILIVE_EC_LOGIN_VERIFY    = 8; //用户鉴权非法
+}
+
+message ILiveRequest
+{
+    optional uint32 version      = 1; //版本号
+    optional uint32 cmd          = 2; //请求命令字
+    optional uint32 subcmd       = 3; //请求子命令字
+    optional uint64 seq          = 4; //请求序列号    
+    optional uint64 uid          = 5; //用户唯一标示
+    optional bytes  binary_body  = 6; //原始二进制
+    optional bytes  ex           = 7; //扩展的pb内容
+    optional uint32 client_type  = 8; //客户端类型
+    optional uint32 client_ip    = 9;   //客户端ip(网络字节序)
+    
+    //2016/11/02
+    optional uint32 service_ip   = 10; //服务端ip
+    optional string business     = 11; //调用方
+    optional bytes  auth_key     = 12; //鉴权key
+    optional uint32 auth_type    = 13; //鉴权类型 
+    optional uint32 auth_ip      = 14;//调用方ip
+    optional uint64 auth_appid   = 15; //appid
+    optional uint64 tinyid       = 16; //tinyid
+    optional uint32 client_port  = 17; //客户端端口
+    optional uint32 flag         = 18; //1.请求压缩
+	optional string original_id = 19;//原始的用户id
+  	optional string original_key = 20;//原始id对应的key
+  	optional uint32 original_key_type = 21;//原始id鉴权类型
+  	optional uint32 original_id_type = 22;//原始的用户类型 1-qq 2-微信
+  	optional uint64 original_auth_appid = 23;//原始id的鉴权appid
+}
+
+message ILiveResponse
+{
+    optional uint32 version     = 1; //版本号
+    optional uint32 cmd         = 2; //请求命令字
+    optional uint32 subcmd      = 3; //请求子命令字
+    optional uint64 seq         = 4; //请求序列号    
+    optional uint64 uid         = 5; //用户唯一标示
+    optional uint32 err_code    = 6; //错误码(0~10000为系统错误),此错误表示系统错误，业务错误，建议ex中另加字段表示
+    optional string err_msg     = 7; //错误信息
+    optional bytes  binary_body = 8; //原始二进制
+    optional bytes  ex          = 9; //扩展的pb内容
+    optional uint32 client_type  = 10; //客户端类型
+    
+    //2016/11/02
+    optional uint32 flag        = 11; //1.压缩
+}
