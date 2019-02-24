@@ -1,7 +1,9 @@
 package com.tencent.teresa.worker;
 
 
+import co.paralleluniverse.fibers.SuspendExecution;
 import com.tencent.teresa.codec.IoPacket;
+import com.tencent.teresa.handler.TaskHandler;
 import com.tencent.teresa.limiter.DefaultPacketLimiter;
 import com.tencent.teresa.limiter.IoPacketLimiter;
 import com.tencent.teresa.processor.Processor;
@@ -47,7 +49,13 @@ public class ThreadPoolWorkerService extends AbstractWorkerService {
 
 	@Override
 	public void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter) {
-		tasks.execute(new BusinessWorker(ch, msg, processor,packetLimiter));
+		tasks.execute(() -> {
+			try {
+				taskHandler.handler(ch, msg, processor, packetLimiter);
+			} catch (SuspendExecution suspendExecution) {
+				logger.error("thread mode should not accure this err, make sure you use quasar agent with use CoroutineWorkerService");
+			}
+		});
 	}
 }
 

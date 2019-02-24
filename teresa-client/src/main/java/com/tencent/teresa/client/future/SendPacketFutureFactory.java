@@ -29,7 +29,7 @@ public class SendPacketFutureFactory {
             Channel channel = channelFuture.getNow();
             IoPacketFuture item = (IoPacketFuture)channelManager.remove(routerInfo.getSocketAddress(),req.getSeq());
             if (item == null) {
-                logger.error("can not find cmd {} seq {} from channel manager, maybe client is too hard to send a packet");
+                logger.error("can not find subCmd {} seq {} from channel manager, maybe client is too hard to send a packet");
                 return;
             } else if (!item.getIoPacket().equals(req)) {
                 logger.error("FATAL ERROR!! unmatched ioseq & req, lookups held too many items without timeout checking?");

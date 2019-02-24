@@ -11,12 +11,7 @@ import java.util.Map;
 public class ProtobufSerializer implements Serializer {
     private Map<Class, Schema> cachedSchemas = new HashMap<Class, Schema>();
     private int optimalBufferSize = 1024 * 512;
-    private ThreadLocal<LinkedBuffer> linkedBuffer = new ThreadLocal<LinkedBuffer>() {
-        @Override
-        protected LinkedBuffer initialValue() {
-            return LinkedBuffer.allocate(optimalBufferSize);
-        }
-    };
+    private ThreadLocal<LinkedBuffer> linkedBuffer = ThreadLocal.withInitial(() -> LinkedBuffer.allocate(optimalBufferSize));
 
     public ProtobufSerializer() {
     }
@@ -38,6 +33,7 @@ public class ProtobufSerializer implements Serializer {
         }
     }
 
+    //这里需要传入linkedBuffer是为了让channelBased使用，默认使用ThreadLocal中的linkedBuffer
     @Override
     public byte[] serialize(Object obj, LinkedBuffer linkedBuffer) throws Exception {
         Schema schema = getSchema(obj.getClass());
@@ -55,7 +51,7 @@ public class ProtobufSerializer implements Serializer {
         Schema schema = getSchema(klass);
         try {
             T obj = klass.newInstance();
-            ProtobufIOUtil.mergeFrom(data, obj, schema);
+            ProtostuffIOUtil.mergeFrom(data, obj, schema);
             return obj;
         }catch(Exception e) {
             throw new Exception( "deserialize error:" + e.getMessage(), e);

@@ -31,7 +31,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
 
     
     private Integer version;
-//    private Integer cmd;
+//    private Integer subCmd;
 //    private Integer subcmd;
 //    private Long seq;
     private Long uid;
@@ -77,7 +77,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body,Serializer serializer) throws Exception {
         ILiveRequest request = (ILiveRequest) reqPacket;
         byte[] bytes = U.EMPTY_BYTES;
-        if (body != null || serializer != null) {
+        if (body != null && serializer != null) {
             bytes = serializer.serialize(body);
         }
         ILiveResponse response = new ILiveResponse();
@@ -465,11 +465,15 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
         if(message.version != null)
             output.writeUInt32(1, message.version, false);
 
-        if(message.cmd != null)
-            output.writeUInt32(2, (Integer)message.cmd, false);
+        if(message.cmd != null) {
+            int cmd = Integer.valueOf((String)message.cmd);
+            output.writeUInt32(2, cmd, false);
+        }
 
-        if(message.subcmd != null)
-            output.writeUInt32(3, (Integer) message.subcmd, false);
+        if(message.subcmd != null) {
+            int subCmd = Integer.valueOf((String)message.subcmd);
+            output.writeUInt32(3, subCmd, false);
+        }
 
         if(message.seq != null)
             output.writeUInt64(4, message.seq, false);
@@ -537,7 +541,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
         switch(number)
         {
             case 1: return "version";
-            case 2: return "cmd";
+            case 2: return "subCmd";
             case 3: return "subcmd";
             case 4: return "seq";
             case 5: return "uid";
@@ -573,7 +577,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     static
     {
         __fieldMap.put("version", 1);
-        __fieldMap.put("cmd", 2);
+        __fieldMap.put("subCmd", 2);
         __fieldMap.put("subcmd", 3);
         __fieldMap.put("seq", 4);
         __fieldMap.put("uid", 5);

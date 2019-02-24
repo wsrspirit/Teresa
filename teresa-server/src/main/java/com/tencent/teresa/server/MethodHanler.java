@@ -8,11 +8,11 @@ import java.lang.reflect.Method;
 public class MethodHanler {
     private Object object;
     private Method method;
-    private int subCmd;
+    private Object subCmd;
     private Class[] parameterType;
     private Class returnType;
 
-    public MethodHanler(Object object, Method method, int subCmd, Class[] parameterType, Class returnType) {
+    public MethodHanler(Object object, Method method, Object subCmd, Class[] parameterType, Class returnType) {
         this.object = object;
         this.method = method;
         this.subCmd = subCmd;
@@ -41,11 +41,11 @@ public class MethodHanler {
         this.method = method;
     }
 
-    public int getSubCmd() {
+    public Object getSubCmd() {
         return subCmd;
     }
 
-    public void setSubCmd(int subCmd) {
+    public void setSubCmd(Object subCmd) {
         this.subCmd = subCmd;
     }
 

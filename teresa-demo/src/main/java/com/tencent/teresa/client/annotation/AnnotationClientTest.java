@@ -18,7 +18,9 @@ public class AnnotationClientTest {
         DemoServiceByAnnotation demoService = (DemoServiceByAnnotation) applicationContext.getBean("demoServiceByAnnotation");
         ILiveRequest request = new ILiveRequest();
         request.setUid(3333L);
-        AddExperienceRsp addExperienceRsp = demoService.addExp(new AddExperienceReq(),request);
-        logger.debug("rsp level {} result {}",addExperienceRsp.getLevel(),addExperienceRsp.getResult());
+        for (int i = 0; i < 5; i++) {
+            AddExperienceRsp addExperienceRsp = demoService.addExp(new AddExperienceReq(),request);
+            logger.debug("index {} rsp level {} result {}",i,addExperienceRsp.getLevel(),addExperienceRsp.getResult());
+        }
     }
 }

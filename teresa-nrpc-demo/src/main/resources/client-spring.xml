@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.tencent.teresa"/>
+
+    <context:property-placeholder location="classpath:teresa.properties"/>
+
+    <bean id="scannerConfigurer" class="com.tencent.teresa.client.spring.annotation.BeanScannerConfigurator">
+        <constructor-arg name="scannerPath" value="${scannerPath}"/>
+    </bean>
+
+    <!--<bean id="tcpRpcClient" class="com.tencent.teresa.client.TcpRpcClient">-->
+        <!--<constructor-arg name="ioPacketCodec" ref="ioPacketCodec"/>-->
+        <!--<constructor-arg name="workerService" ref="workerService"/>-->
+        <!--<constructor-arg name="timeoutManager" ref="timeoutManager"/>-->
+        <!--<constructor-arg name="routerService" ref="routerService"/>-->
+    <!--</bean>-->
+
+    <bean id="routerService" class="com.tencent.teresa.route.DefaultRouterService"/>
+
+    <!--<bean id="ioPacketCodec" class="com.tencent.teresa.codec.ILivePackageIoPacketCodecServicecService">-->
+        <!--<constructor-arg name="client" value="true"/>-->
+    <!--</bean>-->
+
+
+    <!--<bean id="nrpcClientProxy" class="com.tencent.teresa.proxy.NrpcClientProxy">-->
+        <!--<constructor-arg ref="protoBufSerializer"/>-->
+    <!--</bean>-->
+
+    <bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>
+
+    <bean id="timeoutManager" class="com.tencent.teresa.timeout.DefaultTimeoutManager"/>
+
+    <!--bean can be created by xml, but not recommended-->
+    <!--<bean id="demoService" class="com.tencent.teresa.client.spring.ClientFactoryBean">-->
+        <!--<property name="interfaceName" value="com.tencent.teresa.client.DemoService"/>-->
+        <!--<property name="bigCmd" value="0x123"/>-->
+        <!--<property name="clientProxy" value="iliveClientProxy"/>-->
+        <!--<property name="clientInstance" value="tcpRpcClient"/>-->
+        <!--<property name="methodAttrMap">-->
+            <!--<map>-->
+                <!--<entry key="addExp">-->
+                    <!--<map>-->
+                        <!--<entry key="subcmd" value="0x3"/>-->
+                        <!--<entry key="timeout" value="1000"/>-->
+                    <!--</map>-->
+                <!--</entry>-->
+            <!--</map>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+</beans>

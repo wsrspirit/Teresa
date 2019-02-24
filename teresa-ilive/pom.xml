@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.tencent.spirit</groupId>
+    <groupId>com.spirit.rpc</groupId>
     <artifactId>teresa-ilive</artifactId>
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.tencent.spirit</groupId>
+        <groupId>com.spirit.rpc</groupId>
         <artifactId>Teresa</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -18,15 +18,21 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.tencent.spirit</groupId>
+            <groupId>com.spirit.rpc</groupId>
             <artifactId>teresa-client</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${teresa_version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.tencent.spirit</groupId>
+            <groupId>com.spirit.rpc</groupId>
             <artifactId>teresa-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${teresa_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.spirit.rpc</groupId>
+            <artifactId>teresa-server</artifactId>
+            <version>${teresa_version}</version>
         </dependency>
         <!-- JUnit -->
         <dependency>
@@ -39,7 +45,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>4.0</version>
         </dependency>
 
         <!-- Netty -->

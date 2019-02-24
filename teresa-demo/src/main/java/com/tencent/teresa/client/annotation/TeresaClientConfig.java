@@ -9,6 +9,6 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("client-spring.xml")
 //@ClientConfig(protocol = "tcp")
 @ClientConfig(protocol = "udp")
-@IliveCodecConfig(isClient = true)
+@IliveCodecConfig(isClient = true,serializer = "pb")
 public class TeresaClientConfig {
 }

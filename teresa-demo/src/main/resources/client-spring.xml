@@ -28,7 +28,13 @@
         <!--<constructor-arg name="client" value="true"/>-->
     <!--</bean>-->
 
-    <bean id="iliveClientProxy" class="com.tencent.teresa.IliveClientProxy.IliveClientProxy"/>
+    <bean id="iliveClientProxy" class="com.tencent.teresa.IliveClientProxy.IliveClientProxy">
+        <constructor-arg ref="serializer"/>
+    </bean>
+
+    <bean id="nrpcClientProxy" class="com.tencent.teresa.proxy.NrpcClientProxy">
+        <constructor-arg ref="serializer"/>
+    </bean>
 
     <bean id="serializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>
 

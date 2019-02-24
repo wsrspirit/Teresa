@@ -6,8 +6,9 @@ import com.tencent.teresa.codec.IoPacketCodec;
 import com.tencent.teresa.registry.RegistryService;
 import com.tencent.teresa.serializer.Serializer;
 import com.tencent.teresa.server.MethodHanler;
-import com.tencent.teresa.server.annotation.RpcMethod;
-import com.tencent.teresa.server.annotation.RpcService;
+import com.tencent.teresa.server.ServerRpcHandler;
+import com.tencent.teresa.server.annotation.ServerMethod;
+import com.tencent.teresa.server.annotation.ServerService;
 import com.tencent.teresa.worker.WorkerService;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import java.util.Map;
 public abstract class AbstractRpcServerService implements RpcServerService,ApplicationContextAware,InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(AbstractRpcServerService.class);
 
-    protected Map<Integer, MethodHanler> methodHanlerMap = new HashMap<>();
+    protected Map<Object, MethodHanler> methodHanlerMap = new HashMap<>();
 
     protected String serverAddress;
 
@@ -37,18 +38,20 @@ public abstract class AbstractRpcServerService implements RpcServerService,Appli
     protected Serializer serializer;
     @Autowired
     protected RegistryService registryService;
+    protected ServerRpcHandler serverRpcHandler;
+
 
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         //HSF 方式的调用
-        Map<String, Object> map = ctx.getBeansWithAnnotation(RpcService.class);
+        Map<String, Object> map = ctx.getBeansWithAnnotation(ServerService.class);
         if (MapUtils.isNotEmpty(map)) {
             for (Object serviceBean : map.values()) {
-                RpcService rpcServiceAnnotation = serviceBean.getClass().getAnnotation(RpcService.class);
+                ServerService rpcServiceAnnotation = serviceBean.getClass().getAnnotation(ServerService.class);
                 int cmd = rpcServiceAnnotation.cmd();
                 for (Method method : serviceBean.getClass().getDeclaredMethods()) {
-                    if (method.getAnnotation(RpcMethod.class) != null) {
-                        int subcmd = method.getAnnotation(RpcMethod.class).subcmd();
+                    if (method.getAnnotation(ServerMethod.class) != null) {
+                        String subcmd = method.getAnnotation(ServerMethod.class).subcmd();
                         registryService.registry(serverAddress,cmd,subcmd);
 
                         Class<?>[] parameterTypes = method.getParameterTypes();
@@ -65,6 +68,13 @@ public abstract class AbstractRpcServerService implements RpcServerService,Appli
                 }
             }
         }
+
+        initServerRpcHandler();
+    }
+
+
+    private void initServerRpcHandler() {
+        serverRpcHandler = new ServerRpcHandler(workerService,methodHanlerMap,serializer);
     }
 
     private boolean checkParam(Class<?>[] parameterTypes) {

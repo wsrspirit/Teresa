@@ -1,14 +1,15 @@
 package com.tencent.teresa.IliveClientProxy;
 
-import com.dyuproject.protostuff.ByteString;
 import com.tencent.teresa.client.AbstractRpcClientService;
 import com.tencent.teresa.client.TcpRpcClient;
 import com.tencent.teresa.client.spring.ClientProxy;
 import com.tencent.teresa.packet.ILiveRequest;
 import com.tencent.teresa.packet.ILiveResponse;
 import com.tencent.teresa.route.RouterInfo;
+import com.tencent.teresa.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -16,19 +17,21 @@ import java.util.Map;
 public class IliveClientProxy extends ClientProxy {
     private static final Logger logger = LoggerFactory.getLogger(IliveClientProxy.class);
 
-    public IliveClientProxy() {
+    @Autowired
+    public IliveClientProxy(Serializer serializer) {
+        super(serializer);
     }
 
-    public IliveClientProxy(int bigCmd, Map<String, Map<String, Integer>> methodAttrMap, TcpRpcClient tcpRpcClient) {
+    public IliveClientProxy(String bigCmd, Map<String, Map<String, Object>> methodAttrMap, TcpRpcClient tcpRpcClient) {
         super(bigCmd, methodAttrMap, tcpRpcClient);
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args, Map<String, Integer> attrMap) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args, Map<String, Object> attrMap) throws Throwable {
         ILiveRequest request = (ILiveRequest) args[1];
         request.setCmd(bigCmd);
-        int subCmd = attrMap.get("cmd");
-        int timeout = attrMap.get("timeout");
+        String subCmd = (String)attrMap.get("subCmd");
+        int timeout = (int)attrMap.get("timeout");
         request.setSubcmd(subCmd);
         request.setSeq(seq.getAndIncrement());
         request.setContent(args[0],serializer);

@@ -17,24 +17,24 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class ClientProxy implements InvocationHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientProxy.class);
 
-    protected int bigCmd;
+    protected String bigCmd;
     protected RpcClientService<IoPacket,IoPacket> rpcClientService;
     protected AtomicLong seq = new AtomicLong(0);
     protected Serializer serializer;
-    protected Map<String,Map<String,Integer>> methodAttrMap;
+    protected Map<String,Map<String,Object>> methodAttrMap;
 
-    public ClientProxy() {
-        serializer = new ProtobufSerializer();
+    public ClientProxy(Serializer serializer) {
+        this.serializer = serializer;
     }
 
-    public ClientProxy(int bigCmd, Map<String,Map<String,Integer>> methodAttrMap, RpcClientService rpcClientService) {
+    public ClientProxy(String bigCmd, Map<String,Map<String,Object>> methodAttrMap, RpcClientService rpcClientService) {
         this.bigCmd = bigCmd;
         this.methodAttrMap = methodAttrMap;
         this.rpcClientService = rpcClientService;
         serializer = new ProtobufSerializer();
     }
 
-    public abstract Object invoke(Object proxy, Method method, Object[] args,Map<String,Integer> attrMap) throws Throwable;
+    public abstract Object invoke(Object proxy, Method method, Object[] args,Map<String,Object> attrMap) throws Throwable;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -42,15 +42,15 @@ public abstract class ClientProxy implements InvocationHandler {
         if (!methodAttrMap.containsKey(method.getName())) {
             throw new IllegalArgumentException("find no declare subcmd method : " + method.getName());
         }
-        Map<String,Integer> attrMap = methodAttrMap.get(method.getName());
+        Map<String,Object> attrMap = methodAttrMap.get(method.getName());
         return invoke(proxy, method, args,attrMap);
     }
 
-    public int getBigCmd() {
+    public String getBigCmd() {
         return bigCmd;
     }
 
-    public void setBigCmd(int bigCmd) {
+    public void setBigCmd(String bigCmd) {
         this.bigCmd = bigCmd;
     }
 
@@ -62,15 +62,15 @@ public abstract class ClientProxy implements InvocationHandler {
         this.rpcClientService = rpcClientService;
     }
 
-    public Map<String, Map<String, Integer>> getMethodAttrMap() {
+    public Map<String, Map<String, Object>> getMethodAttrMap() {
         return methodAttrMap;
     }
 
-    public void setMethodAttrMap(Map<String, Map<String, Integer>> methodAttrMap) {
+    public void setMethodAttrMap(Map<String, Map<String, Object>> methodAttrMap) {
         this.methodAttrMap = methodAttrMap;
     }
 
-    public static <T> T newInstance(Class<T> innerInterface, int bigCmd, Map<String,Map<String,Integer>> methodAttrMap, RpcClientService rpcClientService, ClientProxy proxy) {
+    public static <T> T newInstance(Class<T> innerInterface, String bigCmd, Map<String,Map<String,Object>> methodAttrMap, RpcClientService rpcClientService, ClientProxy proxy) {
         ClassLoader classLoader = innerInterface.getClassLoader();
         Class[] interfaces = new Class[] { innerInterface };
         proxy.setBigCmd(bigCmd);

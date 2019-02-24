@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ClientMethod {
-    int cmd() default 0;
+    String subCmd();
     int timeout() default 1000;
 }

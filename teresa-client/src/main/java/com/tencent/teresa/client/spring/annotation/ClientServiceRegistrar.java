@@ -13,7 +13,7 @@ public class ClientServiceRegistrar implements ImportBeanDefinitionRegistrar {
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
                 .getAnnotationAttributes(ClientService.class.getName()));
-        int bigCmd = attributes.getNumber("bigCmd");
+        String bigCmd = attributes.getString("bigCmd");
         String proxy = attributes.getString("proxy");
         String client = attributes.getString("client");
 

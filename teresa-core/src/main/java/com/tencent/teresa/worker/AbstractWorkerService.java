@@ -1,6 +1,8 @@
 package com.tencent.teresa.worker;
 
 import com.tencent.teresa.codec.IoPacket;
+import com.tencent.teresa.handler.DefaultTaskHandler;
+import com.tencent.teresa.handler.TaskHandler;
 import com.tencent.teresa.limiter.DefaultPacketLimiter;
 import com.tencent.teresa.limiter.IoPacketLimiter;
 import com.tencent.teresa.processor.Processor;
@@ -13,13 +15,15 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractWorkerService implements WorkerService{
     private IoPacketLimiter limiter;
     private static final Logger logger = LoggerFactory.getLogger(AbstractWorkerService.class);
+    protected TaskHandler taskHandler;
 
     public AbstractWorkerService() {
-        limiter = new DefaultPacketLimiter();
+        this(new DefaultPacketLimiter());
     }
 
     public AbstractWorkerService(IoPacketLimiter limiter) {
         this.limiter = limiter;
+        this.taskHandler = new DefaultTaskHandler();
     }
 
     public abstract void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter);

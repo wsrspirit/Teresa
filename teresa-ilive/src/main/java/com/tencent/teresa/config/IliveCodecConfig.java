@@ -11,4 +11,5 @@ import java.lang.annotation.Target;
 @Import(IliveCodecConfigRegistrar.class)
 public @interface IliveCodecConfig {
     boolean isClient();
+    String serializer();
 }

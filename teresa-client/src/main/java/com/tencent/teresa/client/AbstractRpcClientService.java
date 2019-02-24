@@ -60,7 +60,7 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
         });
         IoPacketFuture ioPacketFuture = sendPacketFutureFactory.newSendPacketFuture(req,timeout,routerInfo,future);
         if (channelManager.put(routerInfo.getSocketAddress(),(Long)req.getSeq() ,ioPacketFuture) != null) {
-            logger.error("FATAL ERROR!! duplicate ioseq acquire lookups! seq=" + req.getSeq() + ", cmd=" + req.getCmd());
+            logger.error("FATAL ERROR!! duplicate ioseq acquire lookups! seq=" + req.getSeq() + ", subCmd=" + req.getCmd());
         }
 
         return ioPacketFuture;

@@ -31,7 +31,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
 
     
     private Integer version;
-//    private Integer cmd;
+//    private Integer subCmd;
 //    private Integer subcmd;
 //    private Long seq;
     private Long uid;
@@ -75,7 +75,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body,Serializer serializer) throws Exception {
         ILiveRequest request = (ILiveRequest) reqPacket;
         byte[] bytes = U.EMPTY_BYTES;
-        if (body != null || serializer != null) {
+        if (body != null && serializer != null) {
             bytes = serializer.serialize(body);
         }
         ILiveResponse response = new ILiveResponse();
@@ -319,7 +319,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
         switch(number)
         {
             case 1: return "version";
-            case 2: return "cmd";
+            case 2: return "subCmd";
             case 3: return "subcmd";
             case 4: return "seq";
             case 5: return "uid";
@@ -343,7 +343,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     static
     {
         __fieldMap.put("version", 1);
-        __fieldMap.put("cmd", 2);
+        __fieldMap.put("subCmd", 2);
         __fieldMap.put("subcmd", 3);
         __fieldMap.put("seq", 4);
         __fieldMap.put("uid", 5);

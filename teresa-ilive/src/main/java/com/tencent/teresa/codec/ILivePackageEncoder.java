@@ -5,6 +5,7 @@ import com.tencent.teresa.codec.base.BaseEncoder;
 import com.tencent.teresa.packet.IliveIdentifier;
 import com.tencent.teresa.packet.ILiveRequest;
 import com.tencent.teresa.packet.ILiveResponse;
+import com.tencent.teresa.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,7 +16,8 @@ import org.slf4j.LoggerFactory;
 public class ILivePackageEncoder extends BaseEncoder {
     private boolean isClient;
     private static final Logger logger = LoggerFactory.getLogger(ILivePackageEncoder.class);
-    public ILivePackageEncoder(boolean isClient) {
+    public ILivePackageEncoder(boolean isClient,Serializer serializer) {
+        super(serializer);
         this.isClient = isClient;
     }
 

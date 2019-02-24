@@ -40,12 +40,12 @@ public class ClientAnnotationScanner extends ClassPathBeanDefinitionScanner {
             ClientService clientService = (ClientService)beanClass.getAnnotation(ClientService.class);
 
             Method[] methods = beanClass.getDeclaredMethods();
-            Map<String,Map<String,Integer>> methodAttrMap = new HashMap<>();
+            Map<String,Map<String,Object>> methodAttrMap = new HashMap<>();
             for (Method m : methods) {
                 if (m.isAnnotationPresent(ClientMethod.class)) {
                     ClientMethod clientMethod = m.getAnnotation(ClientMethod.class);
-                    Map<String,Integer> attrMap = new HashMap<>();
-                    attrMap.put("cmd",clientMethod.cmd());
+                    Map<String,Object> attrMap = new HashMap<>();
+                    attrMap.put("subCmd",clientMethod.subCmd());
                     attrMap.put("timeout",clientMethod.timeout());
                     methodAttrMap.put(m.getName(),attrMap);
                 }

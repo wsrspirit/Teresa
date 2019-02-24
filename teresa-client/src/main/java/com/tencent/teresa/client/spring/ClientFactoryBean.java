@@ -1,8 +1,6 @@
 package com.tencent.teresa.client.spring;
 
 import com.tencent.teresa.client.RpcClientService;
-import com.tencent.teresa.client.TcpRpcClient;
-import com.tencent.teresa.client.spring.annotation.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,9 +14,9 @@ import java.util.Map;
 public class ClientFactoryBean implements InitializingBean,FactoryBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(ClientFactoryBean.class);
     private String interfaceName;
-    private int bigCmd;
+    private String bigCmd;
     private ApplicationContext applicationContext;
-    Map<String,Map<String,Integer>> methodAttrMap;
+    Map<String,Map<String,Object>> methodAttrMap;
     private String clientProxy;
     private String clientInstance;
 
@@ -58,19 +56,19 @@ public class ClientFactoryBean implements InitializingBean,FactoryBean, Applicat
         this.interfaceName = interfaceName;
     }
 
-    public int getBigCmd() {
+    public String getBigCmd() {
         return bigCmd;
     }
 
-    public void setBigCmd(int bigCmd) {
+    public void setBigCmd(String bigCmd) {
         this.bigCmd = bigCmd;
     }
 
-    public Map<String, Map<String, Integer>> getMethodAttrMap() {
+    public Map<String, Map<String, Object>> getMethodAttrMap() {
         return methodAttrMap;
     }
 
-    public void setMethodAttrMap(Map<String, Map<String, Integer>> methodAttrMap) {
+    public void setMethodAttrMap(Map<String, Map<String, Object>> methodAttrMap) {
         this.methodAttrMap = methodAttrMap;
     }
 

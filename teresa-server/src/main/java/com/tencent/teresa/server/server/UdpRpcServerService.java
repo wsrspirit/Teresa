@@ -32,7 +32,7 @@ public class UdpRpcServerService extends AbstractRpcServerService {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast(workerGroup,"e", new UdpEncoderAdapter(ioPacketCodec.getEncoder(ch)));
                         p.addLast(workerGroup,"d", new UdpDecoderAdapter(ioPacketCodec.getDecoder(ch)));
-                        p.addLast(workerGroup,"h", new ServerRpcHandler(workerService,methodHanlerMap,serializer));
+                        p.addLast(workerGroup,"h", serverRpcHandler);
                     };
                 }).bind(host,port);
 

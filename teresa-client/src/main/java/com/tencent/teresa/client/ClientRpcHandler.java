@@ -30,7 +30,7 @@ public class ClientRpcHandler<T_REQ extends IoPacket, T_RSP extends IoPacket> ex
         Channel channel = channelHandlerContext.channel();
         SendPacketFuture<IoPacket> future = (SendPacketFuture<IoPacket>) channelManager.remove(channel.remoteAddress(),ioPacket.getSeq());
         if (future == null) {
-            logger.error("cmd {} seq {} routerId {} response can not find it's future could not be found, mostly because remote server rpc timeout"
+            logger.error("subCmd {} seq {} routerId {} response can not find it's future could not be found, mostly because remote server rpc timeout"
                     ,ioPacket.getCmd(),ioPacket.getSeq(),ioPacket.getRouterId());
             return;
         }

@@ -1,0 +1,171 @@
+package nrpc_logic_svr;
+message AppInfo{
+    optional uint64 app_id=1;//id
+    optional string name=2;//name
+    repeated ModuleInfo module=3;//模块列表
+}
+message ModuleInfo{
+    optional uint64 module_id=1;//id
+    optional string name=2;//name
+}
+message TinyServiceInfo{
+    optional uint64 service_id=1;//id
+    optional string name=2;//name
+}
+
+message ServiceInfo{
+    optional uint64 service_id=1;//service id
+    optional string name=2;//name
+    optional uint64 app_id=3;//app id
+    optional uint64 module_id=4;//module id
+    optional string proto_name=5;//协议名称
+    optional string test_addr=6;//测试环境uri
+    optional string addr=7;//正式环境uri
+    optional string desc=8;//服务描述
+    optional string content=9;//协议内容
+    repeated string method_list=10;//方法列表
+}
+
+
+message TestCase{
+    optional uint64 test_case_id=1;//id
+    optional string name=2;//name
+    optional string header=3;//json包头
+    optional string body=4;//json包体
+    optional string method=5;//方法名
+}
+//==========
+message GetTabListReq{
+    optional uint32 start=1;//start
+    optional uint32 end=2;//end
+}
+
+message GetTabListRsp{
+    optional uint32 ret_code=1;//非0错误
+    repeated AppInfo app_list=2;//app列表
+    optional uint32 is_end=3;//是否结束
+    optional uint32 total=4;//总页数
+    optional string err_msg=5;//错误信息
+}
+
+message GetServiceListReq{
+    optional uint64 module_id=1;//module id
+    optional uint32 start=2;//start
+    optional uint32 end=3;//end
+}
+message GetServiceListRsp{
+    optional uint32 ret_code=1;//非0错误
+    repeated TinyServiceInfo service_info_list=2;//服务列表
+    optional uint32 is_end=3;//是否结束
+    optional uint32 total=4;//total
+    optional string err_msg=5;//错误信息
+}
+
+message SaveServiceInfoReq{
+    optional uint64 service_id=1;//service id，新增不需要传id
+    optional string name=2;//name
+    optional uint64 app_id=3;//app id
+    optional uint64 module_id=4;//module id
+    optional string proto_name=5;//协议名称
+    optional string test_addr=6;//测试环境uri
+    optional string addr=7;//正式环境uri
+    optional string desc=8;//服务描述
+    optional string content=9;//协议内容
+}
+
+message SaveServiceInfoRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+}
+
+message GetServiceInfoReq{
+    optional uint64 service_id=1;//service id
+}
+message GetServiceInfoRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional ServiceInfo service_info=2;//服务信息
+
+}
+
+message GetTestCaseListReq{
+    optional uint64 service_id=1;//service id
+    optional string public_name=2;//public:公共用例，rtx名称个人用例
+}
+message GetTestCaseListRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+    repeated TestCase test_case_list=3;//test case列表
+}
+
+message GetTestCaseFormatReq{
+    optional uint64 service_id=1;//service id
+    optional string method=2;//method
+}
+
+message GetTestCaseFormatRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+    optional string default_header=3;//json包头
+    optional string default_body=4;//json包体  
+}
+
+
+message SaveTestCaseReq{
+    optional uint64 test_case_id=1;//test case id，新增不需要传id
+    optional uint64 service_id=2;//service id
+    optional string test_case_name=3;//test case name
+    optional string public_name=4;//public:公共用例，rtx名称个人用例
+    optional string header=5;//json包头
+    optional string body=6;//json包体
+    optional string method=7;//方法名
+}
+message SaveTestCaseRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+}
+
+message ExecTestCaseReq{
+    optional uint64 test_case_id=1;//test case_id
+    optional uint32 is_test=2;//0: 测试 1:现网
+    optional string header=3;//json包头
+    optional string body=4;//json包体
+}
+message ExecTestCaseRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+    optional string rsp_body=3;//响应包体
+}
+
+message CodeBuilderReq{
+    optional uint64 service_id=1;//service id
+    optional uint32 frame_type=2;//框架类型:0:go-neat
+}
+message CodeBuilderRsp{
+    optional uint32 ret_code=1;//非0错误
+    optional string err_msg=2;//错误信息
+    optional string file_name=3;//压缩文件名
+    optional string tgz_content=4;//压缩文件内容
+}
+// L5 env_test: 0:0
+// L5 env_prod: 0:0
+// desc: nrpc logic svr
+service nrpc_logic_svr {
+    //拉取app信息
+    rpc get_tab_list(GetTabListReq) returns(GetTabListRsp);
+    //拉取模块列表
+    rpc get_service_list(GetServiceListReq) returns(GetServiceListRsp);
+    //新建或者更新服务信息
+    rpc save_service(SaveServiceInfoReq) returns(SaveServiceInfoRsp);
+    //获取服务信息
+    rpc get_service_info(GetServiceInfoReq) returns(GetServiceInfoRsp);
+    //获取用例列表
+    rpc get_test_case_list(GetTestCaseListReq) returns(GetTestCaseListRsp);
+    //获取用例格式
+    rpc get_test_case_format(GetTestCaseFormatReq) returns(GetTestCaseFormatRsp);
+    //新增或者保存用例
+    rpc save_test_case(SaveTestCaseReq) returns(SaveTestCaseRsp);
+    //执行用例
+    rpc exec_test_case(ExecTestCaseReq) returns(ExecTestCaseRsp);
+    //下载代码
+    rpc code_builder(CodeBuilderReq) returns(CodeBuilderRsp);
+}

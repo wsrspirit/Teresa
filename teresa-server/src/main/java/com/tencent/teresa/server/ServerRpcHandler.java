@@ -17,7 +17,7 @@ public class ServerRpcHandler extends SimpleChannelInboundHandler<IoPacket> {
     private WorkerService workerService;
     private Processor<IoPacket,IoPacket> processor;
 
-    public ServerRpcHandler(WorkerService workerService, Map<Integer, MethodHanler> methodHanlerMap,Serializer serializer) {
+    public ServerRpcHandler(WorkerService workerService, Map<Object, MethodHanler> methodHanlerMap,Serializer serializer) {
         this.workerService = workerService;
         this.processor = new ServerProcessor(methodHanlerMap,serializer);
     }
