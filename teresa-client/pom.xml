@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.spirit.rpc</groupId>
             <artifactId>teresa-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${teresa_version}</version>
         </dependency>
         <!-- JUnit -->
         <dependency>

@@ -15,7 +15,8 @@
     <bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>
     <!--<bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>-->
 
-    <bean id="workerService" class="com.tencent.teresa.worker.ThreadPoolWorkerService"/>
+    <bean id="workerService" class="com.tencent.teresa.worker.RxJavaWorkerService"/>
+    <!--<bean id="workerService" class="com.tencent.teresa.worker.ThreadPoolWorkerService"/>-->
     <!--<bean id="workerService" class="com.tencent.teresa.worker.CoroutineWorkerService"/>-->
 
     <bean id="registryService" class="com.tencent.teresa.registry.DefaultRegistryService"/>

@@ -50,6 +50,12 @@
             <artifactId>protostuff-runtime</artifactId>
         </dependency>
 
+        <!--rxjava-->
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
