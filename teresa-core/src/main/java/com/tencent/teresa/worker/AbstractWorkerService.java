@@ -35,12 +35,10 @@ public abstract class AbstractWorkerService implements WorkerService{
 
     public abstract void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter);
 
-    public abstract Executor getExecutor();
-
-    public abstract void setWorkerMode(String workerMode);
-
     @Override
     public void dispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor) {
+        //todo limiter能不能不向下传递？
+        //todo 使用新的流量控制方式，不再向下传递，这样能改写taskHandler的书写方式
         if (limiter.acquire(ch,msg,processor)) {
             doDispatch(ch, msg, processor,limiter);
         } else {

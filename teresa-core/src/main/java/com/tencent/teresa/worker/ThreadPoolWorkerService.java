@@ -22,8 +22,9 @@ public class ThreadPoolWorkerService extends AbstractWorkerService {
 	static final Logger logger = LoggerFactory.getLogger(ThreadPoolWorkerService.class);
 	private static final int DEFAULT_THREAD_COUNT = 16;
 
+
 	public ThreadPoolWorkerService() {
-		this(U.DEFAULT_THREADS);
+		super();
 	}
 
 	public ThreadPoolWorkerService(int threadCount) {

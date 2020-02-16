@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultPacketLimiter implements IoPacketLimiter {
-    private int permitsPerSecond;
+    private int totalPermits;
+    private int permitsPerSeconds;
     private AtomicInteger permits;
     private static final Logger logger = LoggerFactory.getLogger(DefaultPacketLimiter.class);
 
@@ -19,25 +20,28 @@ public class DefaultPacketLimiter implements IoPacketLimiter {
     }
 
     public DefaultPacketLimiter(int permits) {
-        this.permitsPerSecond = permits;
-        this.permits = new AtomicInteger(permitsPerSecond);
+        this.totalPermits = permits;
+        this.permits = new AtomicInteger(totalPermits);
     }
 
+    /**
+     * 提前消费
+     * @param channel
+     * @param ioPacket
+     * @param processor
+     * @return
+     */
     @Override
     public boolean acquire(Channel channel, IoPacket ioPacket, Processor processor) {
-        int storedLimit = permits.get();
-        if (storedLimit <= 0) {
-            return false;
-        }
-        permits.decrementAndGet();
-        return true;
+        int storedLimit = permits.decrementAndGet();
+        return storedLimit >= 0;
     }
 
     @Override
     public void release(Channel channel, IoPacket ioPacket, Processor processor) {
         int storedLimit = permits.incrementAndGet();
-        if (storedLimit > permitsPerSecond) {
-            logger.error("fetal err!!! storedLimit more than permitsPerSecond");
+        if (storedLimit > totalPermits) {
+            logger.error("fetal err!!! storedLimit more than totalPermits");
         }
     }
 }

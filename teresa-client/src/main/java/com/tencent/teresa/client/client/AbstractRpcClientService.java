@@ -1,5 +1,6 @@
-package com.tencent.teresa.client;
+package com.tencent.teresa.client.client;
 
+import com.tencent.teresa.client.ClientRpcHandler;
 import com.tencent.teresa.client.future.IoPacketFuture;
 import com.tencent.teresa.client.future.SendPacketFutureFactory;
 import com.tencent.teresa.client.pool.RpcChannelManager;
@@ -49,6 +50,12 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
 
         FixedChannelPool channelPool = channelManager.get(req.getRouterAddr());
         io.netty.util.concurrent.Future<Channel> future = channelPool.acquire();
+
+        IoPacketFuture ioPacketFuture = sendPacketFutureFactory.newSendPacketFuture(req,timeout,routerInfo,future);
+        if (channelManager.storeSendPackage(routerInfo.getSocketAddress(),(Long)req.getSeq() ,ioPacketFuture) != null) {
+            logger.error("FATAL ERROR!! duplicate ioseq acquire lookups! seq=" + req.getSeq() + ", subCmd=" + req.getCmd());
+        }
+
         future.addListener(futureResult -> {
             if (futureResult.isSuccess()) {
                 Channel channel = future.getNow();
@@ -56,12 +63,9 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
                 channelPool.release(channel);
             } else {
                 logger.error("channel manager get channel future err, maybe connect remote fail");
+//                channelManager.remove(routerInfo.getSocketAddress(),req.getSeq());
             }
         });
-        IoPacketFuture ioPacketFuture = sendPacketFutureFactory.newSendPacketFuture(req,timeout,routerInfo,future);
-        if (channelManager.put(routerInfo.getSocketAddress(),(Long)req.getSeq() ,ioPacketFuture) != null) {
-            logger.error("FATAL ERROR!! duplicate ioseq acquire lookups! seq=" + req.getSeq() + ", subCmd=" + req.getCmd());
-        }
 
         return ioPacketFuture;
     }

@@ -30,6 +30,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
     public RxJavaWorkerService(String workerMode) {
         setWorkerMode(workerMode);
         if (workerMode.equals(U.COROUTINE_WORKER)) {
+
             this.executor = DefaultFiberScheduler.getInstance().getExecutor();
             abstractWorkerService = new CoroutineWorkerService();
         } else {
@@ -46,6 +47,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
             flowable = Flowable.create((FlowableOnSubscribe<IoPacket>) emitter -> {
                 flowableEmitterMap.put(ch.id(),emitter);
                 emitter.onNext(msg);
+
             },BackpressureStrategy.DROP)
                     .onBackpressureBuffer(BUFFER_SIZE)
                     .onBackpressureDrop(o -> {
@@ -54,7 +56,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
 
             flowableMap.putIfAbsent(ch.id(),flowable);
             flowable.observeOn(Schedulers.from(abstractWorkerService.getExecutor())).subscribe(o -> {
-                logger.info("RxJavaWorkerService doDispatch on next {} threadName {}",o.getSeq(),Thread.currentThread().getName());
+                logger.info("RxJavaWorkerService doDispatch on next seq {} threadName {}",o.getSeq(),Thread.currentThread().getName());
                 taskHandler.handler(ch, o, processor, packetLimiter);
             },throwable -> {
                 logger.error("RxJavaWorkerService doDispatch exception {}",throwable);

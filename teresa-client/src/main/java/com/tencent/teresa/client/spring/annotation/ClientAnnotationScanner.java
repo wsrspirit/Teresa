@@ -47,6 +47,7 @@ public class ClientAnnotationScanner extends ClassPathBeanDefinitionScanner {
                     Map<String,Object> attrMap = new HashMap<>();
                     attrMap.put("subCmd",clientMethod.subCmd());
                     attrMap.put("timeout",clientMethod.timeout());
+                    attrMap.put("async",clientMethod.async());
                     methodAttrMap.put(m.getName(),attrMap);
                 }
             }

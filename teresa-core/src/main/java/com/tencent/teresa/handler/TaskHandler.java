@@ -7,5 +7,6 @@ import com.tencent.teresa.processor.Processor;
 import io.netty.channel.Channel;
 
 public interface TaskHandler {
-    public void handler(Channel ch, IoPacket msg, final Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter) throws SuspendExecution;
+    void handler(Channel ch, IoPacket msg, final Processor<IoPacket, IoPacket> processor
+            , IoPacketLimiter packetLimiter) throws SuspendExecution;
 }

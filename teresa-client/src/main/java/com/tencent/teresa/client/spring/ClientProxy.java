@@ -1,7 +1,6 @@
 package com.tencent.teresa.client.spring;
 
-import com.tencent.teresa.client.RpcClientService;
-import com.tencent.teresa.client.TcpRpcClient;
+import com.tencent.teresa.client.client.RpcClientService;
 import com.tencent.teresa.codec.IoPacket;
 import com.tencent.teresa.serializer.ProtobufSerializer;
 import com.tencent.teresa.serializer.Serializer;
@@ -42,6 +41,7 @@ public abstract class ClientProxy implements InvocationHandler {
         if (!methodAttrMap.containsKey(method.getName())) {
             throw new IllegalArgumentException("find no declare subcmd method : " + method.getName());
         }
+
         Map<String,Object> attrMap = methodAttrMap.get(method.getName());
         return invoke(proxy, method, args,attrMap);
     }
@@ -70,7 +70,8 @@ public abstract class ClientProxy implements InvocationHandler {
         this.methodAttrMap = methodAttrMap;
     }
 
-    public static <T> T newInstance(Class<T> innerInterface, String bigCmd, Map<String,Map<String,Object>> methodAttrMap, RpcClientService rpcClientService, ClientProxy proxy) {
+    public static <T> T newInstance(Class<T> innerInterface, String bigCmd, Map<String,Map<String,Object>> methodAttrMap,
+                                    RpcClientService rpcClientService, ClientProxy proxy) {
         ClassLoader classLoader = innerInterface.getClassLoader();
         Class[] interfaces = new Class[] { innerInterface };
         proxy.setBigCmd(bigCmd);

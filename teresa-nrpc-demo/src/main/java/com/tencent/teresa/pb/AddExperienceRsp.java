@@ -221,5 +221,15 @@ public final class AddExperienceRsp implements Externalizable, Message<AddExperi
         __fieldMap.put("level", 4);
         __fieldMap.put("levelMinExp", 5);
     }
-    
+
+    @Override
+    public String toString() {
+        return "AddExperienceRsp{" +
+                "result=" + result +
+                ", increment=" + increment +
+                ", experience=" + experience +
+                ", level=" + level +
+                ", levelMinExp=" + levelMinExp +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.tencent.teresa.client;
 
+import com.tencent.teresa.client.client.AbstractRpcClientService;
 import com.tencent.teresa.client.future.SendPacketFutureFactory;
 import com.tencent.teresa.client.pool.RpcChannelManager;
 import com.tencent.teresa.codec.IoPacket;
@@ -12,17 +13,19 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UdpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends AbstractRpcClientService<T_REQ,T_RSP>{
+public class UdpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends AbstractRpcClientService<T_REQ,T_RSP> {
     private static final Logger logger = LoggerFactory.getLogger(UdpRpcClient.class);
+    private NioEventLoopGroup workerGroup;
+    private NioEventLoopGroup bossEventLoop;
 
     @Override
     public void start() {
         Bootstrap bootstrap = new Bootstrap();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
+        bossEventLoop = new NioEventLoopGroup();
         ChannelInitializer<Channel> channelChannelInitializer = new ChannelInitializer<Channel>() {
             @Override
             protected void initChannel(Channel ch) throws Exception {
@@ -35,7 +38,7 @@ public class UdpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends
 
 
         bootstrap.channel(NioDatagramChannel.class)
-                .group(new NioEventLoopGroup())
+                .group(bossEventLoop)
                 .handler(channelChannelInitializer)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
 
@@ -43,6 +46,13 @@ public class UdpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends
         channelManager = new RpcChannelManager(bootstrap,channelChannelInitializer);
         rpcHandler.setChannelManager(channelManager);
         this.sendPacketFutureFactory = new SendPacketFutureFactory(timeoutManager,channelManager);
-        logger.info("UdpRpcClient start");
+        logger.error("UdpRpcClient start");
+    }
+
+    @Override
+    public void shutdown() {
+        logger.error("UdpRpcClient shutdown");
+        workerGroup.shutdownGracefully();
+        bossEventLoop.shutdownGracefully();
     }
 }
