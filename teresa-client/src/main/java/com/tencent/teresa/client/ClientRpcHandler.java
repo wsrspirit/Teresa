@@ -3,6 +3,9 @@ package com.tencent.teresa.client;
 import com.tencent.teresa.client.future.SendPacketFuture;
 import com.tencent.teresa.client.pool.RpcChannelManager;
 import com.tencent.teresa.codec.IoPacket;
+import com.tencent.teresa.processor.Processor;
+import com.tencent.teresa.rx.FlowableHelper;
+import com.tencent.teresa.utils.U;
 import com.tencent.teresa.worker.WorkerService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,10 +15,27 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelHandler.Sharable;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Sharable
 public class ClientRpcHandler<T_REQ extends IoPacket, T_RSP extends IoPacket> extends SimpleChannelInboundHandler<IoPacket> {
     private static final Logger logger = LoggerFactory.getLogger(ClientRpcHandler.class);
     private RpcChannelManager channelManager;
+    private ExecutorService executor;
+
+    public ClientRpcHandler() {
+        executor = Executors.newFixedThreadPool(U.DEFAULT_THREADS,new ThreadFactory() {
+            final AtomicInteger TID = new AtomicInteger(0);
+            final String GROUP_NAME = "WORK_THREAD_";
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, GROUP_NAME + TID.getAndIncrement());
+            }
+        });
+    }
 
     public RpcChannelManager getChannelManager() {
         return channelManager;
@@ -25,6 +45,12 @@ public class ClientRpcHandler<T_REQ extends IoPacket, T_RSP extends IoPacket> ex
         this.channelManager = channelManager;
     }
 
+    /**
+     * 这里面需要使用线程池承接回调，因为回调可能会被阻塞，但netty线程不可以被阻塞
+     * @param channelHandlerContext
+     * @param ioPacket
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, IoPacket ioPacket) throws Exception {
         Channel channel = channelHandlerContext.channel();
@@ -34,7 +60,11 @@ public class ClientRpcHandler<T_REQ extends IoPacket, T_RSP extends IoPacket> ex
                     ,ioPacket.getCmd(),ioPacket.getSeq(),ioPacket.getRouterId());
             return;
         }
-        future.setResult(ioPacket);
-        future.getTimeoutTask().cancel(false);
+
+        executor.execute(() -> {
+            future.setResult(ioPacket);
+            future.getTimeoutTask().cancel(false);
+            future.callback();
+        });
     }
 }

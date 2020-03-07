@@ -3,7 +3,6 @@ package com.tencent.teresa.config;
 import com.tencent.teresa.codec.NrpcPackageCodec;
 import com.tencent.teresa.serializer.JsonSerializer;
 import com.tencent.teresa.serializer.ProtobufSerializer;
-import com.tencent.teresa.utils.U;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -20,16 +19,21 @@ public class NrpcCodecConfigRegistrar implements ImportBeanDefinitionRegistrar {
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
                 .getAnnotationAttributes(NrpcCodecConfig.class.getName()));
-        String serializer = attributes.getString("serializer");
+        SerializerEnum serializerEnum = attributes.getEnum("serializer");
+//        String serializer = attributes.getString("serializer");
 
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NrpcPackageCodec.class);
 
-        switch (serializer) {
-            case U.PB_SERIALIZER:
-                beanDefinitionBuilder.addPropertyReference("serializer","protoBufSerializer");
+        switch (serializerEnum) {
+            case PROTOBUF_SERIALIZER:
+                BeanDefinition protobufBeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(ProtobufSerializer.class).getBeanDefinition();
+                registry.registerBeanDefinition(SerializerEnum.PROTOBUF_SERIALIZER.name(),protobufBeanDefinition);
+                beanDefinitionBuilder.addPropertyReference("serializer",SerializerEnum.PROTOBUF_SERIALIZER.name());
                 break;
-            case U.JSON_SERIALIZER:
-                beanDefinitionBuilder.addPropertyReference("serializer","jsonSerializer");
+            case JSON_SERIALIZER:
+                BeanDefinition jsonBeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(JsonSerializer.class).getBeanDefinition();
+                registry.registerBeanDefinition(SerializerEnum.JSON_SERIALIZER.name(),jsonBeanDefinition);
+                beanDefinitionBuilder.addPropertyReference("serializer",SerializerEnum.JSON_SERIALIZER.name());
                 break;
             default:
                 logger.error("can not find this kind serializer, plz checkout your config annotation");

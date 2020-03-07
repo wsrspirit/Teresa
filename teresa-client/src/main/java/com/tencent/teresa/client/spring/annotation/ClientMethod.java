@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface ClientMethod {
     String subCmd();
     int timeout() default 1000;
+    boolean async() default false;
 }

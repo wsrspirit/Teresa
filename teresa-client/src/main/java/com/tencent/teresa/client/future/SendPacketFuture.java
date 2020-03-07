@@ -9,84 +9,70 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
+/**
+ * @param <V> 这里的V就是IoPacket
+ */
 public class SendPacketFuture<V> implements IoPacketFuture<V> {
     private IoPacket ioPacket;
     private Future<?> timeoutTask;
-    private Object result;
+    private V result;
     private static final Logger logger = LoggerFactory.getLogger(SendPacketFuture.class);
     private CountDownLatch countDownLatch = new CountDownLatch(1);
+    private CallbackListener<V> callbackListener;
 
     public SendPacketFuture(IoPacket ioPacket) {
         this.ioPacket = ioPacket;
     }
 
-    @Override
     public Object getSeq() {
         return ioPacket.getSeq();
     }
 
-    @Override
-    public Object getCmd() {
-        return ioPacket.getCmd();
-    }
-
-    @Override
     public Object getSubcmd() {
         return ioPacket.getSubcmd();
     }
 
-    @Override
     public long getCreateTime() {
         return ioPacket.getCreateTime();
     }
 
-    @Override
     public Object getRouterId() {
         return ioPacket.getRouterId();
     }
 
-    @Override
     public InetSocketAddress getRouterAddr() {
         return ioPacket.getRouterAddr();
     }
 
-    @Override
     public void setRouterAddr(InetSocketAddress addr) {
         ioPacket.setRouterAddr(addr);
     }
 
-    @Override
     public int getEstimateSize() {
         return ioPacket.getEstimateSize();
     }
 
-    @Override
     public long getRetCode() {
         return ioPacket.getRetCode();
     }
 
-    @Override
     public String getErrorMsg() {
         return ioPacket.getErrorMsg();
     }
 
-    @Override
     public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) throws Exception {
         return ioPacket.newResponsePacket(reqPacket, ec, message, body,serializer);
     }
 
-    @Override
     public Object getContent(Class clazz, Serializer serializer) throws Exception {
         return ioPacket.getContent(clazz, serializer);
     }
 
-    @Override
     public void setContent(Object content, Serializer serializer) throws Exception {
         ioPacket.setContent(content,serializer);
     }
 
 
-    @Override
     public IoPacket getIoPacket() {
         return ioPacket;
     }
@@ -135,4 +121,17 @@ public class SendPacketFuture<V> implements IoPacketFuture<V> {
         }
         return false;
     }
+
+    @Override
+    public void setCallbackListener(CallbackListener<V> listener) {
+        this.callbackListener = listener;
+    }
+
+    @Override
+    public void callback() {
+        if (callbackListener != null) {
+            callbackListener.callback(result);
+        }
+    }
+
 }

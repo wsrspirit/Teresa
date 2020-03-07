@@ -17,7 +17,7 @@
 
     <!--<bean id="tcpRpcClient" class="com.tencent.teresa.client.TcpRpcClient">-->
         <!--<constructor-arg name="ioPacketCodec" ref="ioPacketCodec"/>-->
-        <!--<constructor-arg name="workerService" ref="workerService"/>-->
+        <!--<constructor-arg name="workerMode" ref="workerMode"/>-->
         <!--<constructor-arg name="timeoutManager" ref="timeoutManager"/>-->
         <!--<constructor-arg name="routerService" ref="routerService"/>-->
     <!--</bean>-->

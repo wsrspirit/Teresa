@@ -242,5 +242,16 @@ public final class AddExperienceReq implements Externalizable, Message<AddExperi
         __fieldMap.put("secret", 5);
         __fieldMap.put("orderNo", 6);
     }
-    
+
+    @Override
+    public String toString() {
+        return "AddExperienceReq{" +
+                "anchorUid=" + anchorUid +
+                ", increment=" + increment +
+                ", timestamp=" + timestamp +
+                ", bid=" + bid +
+                ", secret='" + secret + '\'' +
+                ", orderNo='" + orderNo + '\'' +
+                '}';
+    }
 }

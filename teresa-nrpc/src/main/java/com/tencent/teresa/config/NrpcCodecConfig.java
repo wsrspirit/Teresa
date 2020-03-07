@@ -10,5 +10,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Import(NrpcCodecConfigRegistrar.class)
 public @interface NrpcCodecConfig {
-    String serializer();
+    /**
+     * @see SerializerEnum
+     */
+    SerializerEnum serializer();
 }

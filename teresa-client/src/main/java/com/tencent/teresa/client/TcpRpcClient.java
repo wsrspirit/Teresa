@@ -1,10 +1,9 @@
 package com.tencent.teresa.client;
 
+import com.tencent.teresa.client.client.AbstractRpcClientService;
 import com.tencent.teresa.client.future.SendPacketFutureFactory;
 import com.tencent.teresa.client.pool.RpcChannelManager;
 import com.tencent.teresa.codec.IoPacket;
-import com.tencent.teresa.route.RouterInfo;
-import com.tencent.teresa.route.RouterService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,11 +14,12 @@ import org.slf4j.LoggerFactory;
 public class TcpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends AbstractRpcClientService<T_REQ,T_RSP> {
 
     private static final Logger logger = LoggerFactory.getLogger(TcpRpcClient.class);
+    private NioEventLoopGroup workerGroup;
 
     @Override
     public void start() {
         Bootstrap bootstrap = new Bootstrap();
-
+        workerGroup = new NioEventLoopGroup();
         ChannelInitializer<Channel> initializer = new ChannelInitializer<Channel>() {
             @Override
             protected void initChannel(Channel ch) throws Exception {
@@ -31,7 +31,7 @@ public class TcpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends
         };
 
         bootstrap.channel(NioSocketChannel.class)
-                .group(new NioEventLoopGroup())
+                .group(workerGroup)
                 .handler(initializer)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
 
@@ -40,5 +40,10 @@ public class TcpRpcClient<T_REQ extends IoPacket,T_RSP extends IoPacket> extends
         rpcHandler.setChannelManager(channelManager);
         this.sendPacketFutureFactory = new SendPacketFutureFactory(timeoutManager,channelManager);
         logger.info("TcpRpcClient start");
+    }
+
+    @Override
+    public void shutdown() {
+        workerGroup.shutdownGracefully();
     }
 }

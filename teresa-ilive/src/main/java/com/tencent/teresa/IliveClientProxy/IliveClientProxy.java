@@ -1,6 +1,6 @@
 package com.tencent.teresa.IliveClientProxy;
 
-import com.tencent.teresa.client.AbstractRpcClientService;
+import com.tencent.teresa.client.client.AbstractRpcClientService;
 import com.tencent.teresa.client.TcpRpcClient;
 import com.tencent.teresa.client.spring.ClientProxy;
 import com.tencent.teresa.packet.ILiveRequest;

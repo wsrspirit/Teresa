@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.spirit.rpc</groupId>
-    <artifactId>teresa-demo</artifactId>
+    <artifactId>teresa-ilive-demo</artifactId>
     <packaging>jar</packaging>
 
     <parent>

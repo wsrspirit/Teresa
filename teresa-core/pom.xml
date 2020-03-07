@@ -40,6 +40,17 @@
             <artifactId>quasar-core</artifactId>
         </dependency>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
         <!--protostuff-->
         <dependency>
             <groupId>com.dyuproject.protostuff</groupId>
@@ -48,6 +59,12 @@
         <dependency>
             <groupId>com.dyuproject.protostuff</groupId>
             <artifactId>protostuff-runtime</artifactId>
+        </dependency>
+
+        <!--rxjava-->
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
         </dependency>
 
     </dependencies>
