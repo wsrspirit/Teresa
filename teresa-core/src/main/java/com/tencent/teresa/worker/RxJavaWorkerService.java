@@ -1,10 +1,9 @@
 package com.tencent.teresa.worker;
 
-import co.paralleluniverse.fibers.*;
 import com.tencent.teresa.codec.IoPacket;
+import com.tencent.teresa.config.WorkerServiceModeEnum;
 import com.tencent.teresa.limiter.IoPacketLimiter;
 import com.tencent.teresa.processor.Processor;
-import com.tencent.teresa.utils.U;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.reactivex.*;
@@ -14,27 +13,34 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RxJavaWorkerService extends AbstractWorkerService {
     private Map<ChannelId, Flowable<IoPacket>> flowableMap = new ConcurrentHashMap<>();
     private Map<ChannelId,FlowableEmitter<IoPacket>> flowableEmitterMap = new ConcurrentHashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(RxJavaWorkerService.class);
     private static final int BUFFER_SIZE = 3000;
-    private AbstractWorkerService abstractWorkerService;
+    private WorkerService workerService;
+    private WorkerServiceModeEnum workerServiceModeEnum;
 
-    public RxJavaWorkerService() {
-        this(U.THREAD_WORKER);
-    }
+//    public RxJavaWorkerService() {
+//        this(U.THREAD_WORKER);workerMode
+//    }
+//
+//    public RxJavaWorkerService(String workerMode) {
+//        setWorkerMode(workerMode);
+//        if (workerMode.equals(U.COROUTINE_WORKER)) {
+//            workerMode = new CoroutineWorkerService();
+//        } else {
+//            workerMode = new ThreadPoolWorkerService();
+//        }
+//    }
 
-    public RxJavaWorkerService(String workerMode) {
-        setWorkerMode(workerMode);
-        if (workerMode.equals(U.COROUTINE_WORKER)) {
-
-            this.executor = DefaultFiberScheduler.getInstance().getExecutor();
-            abstractWorkerService = new CoroutineWorkerService();
+    public RxJavaWorkerService(WorkerServiceModeEnum workerServiceModeEnum) {
+        this.workerServiceModeEnum = workerServiceModeEnum;
+        if (workerServiceModeEnum.equals(WorkerServiceModeEnum.RX_COROUTINE_MODE)) {
+            workerService = new CoroutineWorkerService();
         } else {
-            abstractWorkerService = new ThreadPoolWorkerService();
+            workerService = new ThreadPoolWorkerService();
         }
     }
 
@@ -55,7 +61,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
                     });
 
             flowableMap.putIfAbsent(ch.id(),flowable);
-            flowable.observeOn(Schedulers.from(abstractWorkerService.getExecutor())).subscribe(o -> {
+            flowable.observeOn(Schedulers.from(workerService.getExecutor())).subscribe(o -> {
                 logger.info("RxJavaWorkerService doDispatch on next seq {} threadName {}",o.getSeq(),Thread.currentThread().getName());
                 taskHandler.handler(ch, o, processor, packetLimiter);
             },throwable -> {
@@ -70,13 +76,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
 
     @Override
     public Executor getExecutor() {
-        return this.abstractWorkerService.getExecutor();
+        return this.workerService.getExecutor();
     }
-
-    @Override
-    public void setWorkerMode(String workerMode) {
-
-    }
-
 
 }

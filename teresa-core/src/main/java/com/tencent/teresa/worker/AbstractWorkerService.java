@@ -18,12 +18,12 @@ import java.util.concurrent.Executor;
  * 这个基类主要负责的是在具体的执行容器执行前的必要操作，如过载保护
  */
 public abstract class AbstractWorkerService implements WorkerService{
+    /**
+     * fixme 这个不是workerService的职责，可以支持传入
+     */
     private IoPacketLimiter limiter;
     private static final Logger logger = LoggerFactory.getLogger(AbstractWorkerService.class);
     protected TaskHandler taskHandler;
-    protected Executor executor;
-    protected String workerMode;
-
     public AbstractWorkerService() {
         this(new DefaultPacketLimiter());
     }

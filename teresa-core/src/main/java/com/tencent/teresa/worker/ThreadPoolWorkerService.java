@@ -21,23 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ThreadPoolWorkerService extends AbstractWorkerService {
 	static final Logger logger = LoggerFactory.getLogger(ThreadPoolWorkerService.class);
 	private static final int DEFAULT_THREAD_COUNT = 16;
-
+	protected Executor executor;
 
 	public ThreadPoolWorkerService() {
-		super();
+		this(U.DEFAULT_THREADS);
 	}
 
 	public ThreadPoolWorkerService(int threadCount) {
-		this(new DefaultPacketLimiter(),threadCount);
-
-	}
-
-	public ThreadPoolWorkerService(IoPacketLimiter limiter) {
-		this(limiter, U.DEFAULT_THREADS);
-	}
-
-	public ThreadPoolWorkerService(IoPacketLimiter limiter, int threadCount) {
-		super(limiter);
+		super();
 		executor = Executors.newFixedThreadPool(threadCount,new ThreadFactory() {
 			final AtomicInteger TID = new AtomicInteger(0);
 			final String GROUP_NAME = "WORK_THREAD_";
@@ -62,11 +53,6 @@ public class ThreadPoolWorkerService extends AbstractWorkerService {
 	@Override
 	public Executor getExecutor() {
 		return executor;
-	}
-
-	@Override
-	public void setWorkerMode(String workerMode) {
-		this.workerMode = U.THREAD_WORKER;
 	}
 }
 

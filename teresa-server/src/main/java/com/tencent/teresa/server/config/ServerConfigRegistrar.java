@@ -1,5 +1,6 @@
 package com.tencent.teresa.server.config;
 
+import com.tencent.teresa.config.ProtocolEnum;
 import com.tencent.teresa.server.server.TcpRpcServerService;
 import com.tencent.teresa.server.server.UdpRpcServerService;
 import com.tencent.teresa.utils.U;
@@ -16,11 +17,11 @@ public class ServerConfigRegistrar implements ImportBeanDefinitionRegistrar {
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
                 .getAnnotationAttributes(ServerConfig.class.getName()));
         String serverAddress = attributes.getString("serverAddress");
-        String protocol = attributes.getString("protocol").toLowerCase();
+        ProtocolEnum protocol = attributes.getEnum("protocol");
 
         BeanDefinition definition;
 
-        if (U.UDP.equals(protocol)) {
+        if (protocol.equals(ProtocolEnum.UDP)) {
             definition = BeanDefinitionBuilder.genericBeanDefinition(UdpRpcServerService.class).getBeanDefinition();
         } else {
             definition = BeanDefinitionBuilder.genericBeanDefinition(TcpRpcServerService.class).getBeanDefinition();

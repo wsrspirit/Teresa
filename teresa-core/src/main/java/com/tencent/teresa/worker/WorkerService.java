@@ -9,5 +9,4 @@ import java.util.concurrent.Executor;
 public interface WorkerService {
 	void dispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor);
 	Executor getExecutor();
-	void setWorkerMode(String workerMode);
 }

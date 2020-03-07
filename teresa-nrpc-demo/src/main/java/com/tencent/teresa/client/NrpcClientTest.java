@@ -18,7 +18,7 @@ public class NrpcClientTest {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(TeresaClientConfig.class);
         //使用注解形式实现
         DemoNrpcService demoService = (DemoNrpcService) applicationContext.getBean("demoNrpcService");
-//        testSync(demoService);
+        testSync(demoService);
         testAsync(demoService);
     }
 

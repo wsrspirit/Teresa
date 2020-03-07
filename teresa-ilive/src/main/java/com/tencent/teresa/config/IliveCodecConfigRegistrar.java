@@ -31,7 +31,7 @@ public class IliveCodecConfigRegistrar implements ImportBeanDefinitionRegistrar 
                 beanDefinitionBuilder.addPropertyReference("serializer","protoBufSerializer");
                 break;
             case U.JSON_SERIALIZER:
-                beanDefinitionBuilder.addPropertyReference("serializer","jsonSerializer");
+                beanDefinitionBuilder.addPropertyReference("serializer","JSON_SERIALIZER");
                 break;
             default:
                 logger.error("can not find this kind serializer, plz checkout your config annotation");

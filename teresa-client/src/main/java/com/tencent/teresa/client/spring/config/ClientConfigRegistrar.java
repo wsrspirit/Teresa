@@ -2,6 +2,7 @@ package com.tencent.teresa.client.spring.config;
 
 import com.tencent.teresa.client.TcpRpcClient;
 import com.tencent.teresa.client.UdpRpcClient;
+import com.tencent.teresa.config.ProtocolEnum;
 import com.tencent.teresa.utils.U;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -16,10 +17,10 @@ public class ClientConfigRegistrar implements ImportBeanDefinitionRegistrar {
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
                 .getAnnotationAttributes(ClientConfig.class.getName()));
         int connectTimeout = attributes.getNumber("connectTimeout").intValue();
-        String protocol = attributes.getString("protocol");
+        ProtocolEnum protocol = attributes.getEnum("protocol");
         BeanDefinition definition ;
 
-        if (U.UDP.equals(protocol)) {
+        if (protocol.equals(ProtocolEnum.UDP)) {
             definition = BeanDefinitionBuilder.genericBeanDefinition(UdpRpcClient.class).getBeanDefinition();
         } else {
             definition = BeanDefinitionBuilder.genericBeanDefinition(TcpRpcClient.class).getBeanDefinition();

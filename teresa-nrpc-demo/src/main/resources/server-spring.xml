@@ -12,14 +12,14 @@
     <context:property-placeholder location="classpath:teresa.properties"/>
 
 
-    <bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>
+    <!--<bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>-->
     <!--<bean id="protoBufSerializer" class="com.tencent.teresa.serializer.ProtobufSerializer"/>-->
 
-    <bean id="workerService" class="com.tencent.teresa.worker.RxJavaWorkerService"/>
-    <!--<bean id="workerService" class="com.tencent.teresa.worker.ThreadPoolWorkerService"/>-->
-    <!--<bean id="workerService" class="com.tencent.teresa.worker.CoroutineWorkerService"/>-->
+    <!--<bean id="workerService" class="com.tencent.teresa.worker.RxJavaWorkerService"/>-->
+    <!--<bean id="workerMode" class="com.tencent.teresa.worker.ThreadPoolWorkerService"/>-->
+    <!--<bean id="workerMode" class="com.tencent.teresa.worker.CoroutineWorkerService"/>-->
 
-    <bean id="registryService" class="com.tencent.teresa.registry.DefaultRegistryService"/>
+    <!--<bean id="registryService" class="com.tencent.teresa.registry.DefaultRegistryService"/>-->
 
     <!--this can be config by spring annotation-->
     <!--<bean id="ioPacketCodec" class="com.tencent.teresa.codec.ILivePackageIoPacketCodecServicecService">-->
@@ -28,8 +28,8 @@
     <!--</bean>-->
         <!--<bean id="rpcServer" class="com.tencent.teresa.server.RpcServer">-->
         <!--<constructor-arg name="ioPacketCodec" ref="ioPacketCodec"/>-->
-        <!--<constructor-arg name="workerService" ref="workerService"/>-->
-        <!--<constructor-arg name="serializer" ref="protobufSerializer"/>-->
+        <!--<constructor-arg name="workerMode" ref="workerMode"/>-->
+        <!--<constructor-arg name="serializer" ref="PROTOBUF_SERIALIZER"/>-->
         <!--<property name="serverAddress" value="${server.address}"/>-->
     <!--</bean>-->
 

@@ -36,9 +36,4 @@ public class CoroutineWorkerService extends AbstractWorkerService {
     public Executor getExecutor() {
         return fiberScheduler.getExecutor();
     }
-
-    @Override
-    public void setWorkerMode(String workerMode) {
-        this.workerMode = U.COROUTINE_WORKER;
-    }
 }

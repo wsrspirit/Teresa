@@ -14,7 +14,7 @@
         <module>teresa-client</module>
         <module>teresa-server</module>
         <module>teresa-ilive</module>
-        <module>teresa-demo</module>
+        <module>teresa-ilive-demo</module>
         <module>teresa-nrpc</module>
         <module>teresa-nrpc-demo</module>
     </modules>
