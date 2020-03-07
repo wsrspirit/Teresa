@@ -69,7 +69,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tencent.teresa.server.annotation.ServerAnnotationTest</mainClass>
+                            <mainClass>com.spirit.teresa.server.annotation.ServerAnnotationTest</mainClass>
                             <addClasspath>true</addClasspath>
                             <useUniqueVersions>false</useUniqueVersions>
                         </manifest>

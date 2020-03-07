@@ -88,7 +88,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tencent.teresa.server.annotation.ServerAnnotationTest</mainClass>
+                            <mainClass>ServerAnnotationTest</mainClass>
                             <addClasspath>true</addClasspath>
                             <useUniqueVersions>false</useUniqueVersions>
                         </manifest>
