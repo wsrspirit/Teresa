@@ -63,7 +63,7 @@ public class RxJavaWorkerService extends AbstractWorkerService {
             flowableMap.putIfAbsent(ch.id(),flowable);
             flowable.observeOn(Schedulers.from(workerService.getExecutor())).subscribe(o -> {
                 logger.info("RxJavaWorkerService doDispatch on next seq {} threadName {}",o.getSeq(),Thread.currentThread().getName());
-                taskHandler.handler(ch, o, processor, packetLimiter);
+                invocationHandler.handler(ch, o, processor, packetLimiter);
             },throwable -> {
                 logger.error("RxJavaWorkerService doDispatch exception {}",throwable);
             },() -> {

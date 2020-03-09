@@ -47,6 +47,7 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
     private List<Meta> meta;
     private Integer errorCode;
     private String errorMsg;
+    private Integer packetType;
 
     public Head()
     {
@@ -235,6 +236,18 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
         this.errorMsg = errorMsg;
     }
 
+    // packetType
+
+    public Integer getPacketType()
+    {
+        return packetType;
+    }
+
+    public void setPacketType(Integer packetType)
+    {
+        this.packetType = packetType;
+    }
+
     // java serialization
 
     public void readExternal(ObjectInput in) throws IOException
@@ -337,6 +350,9 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
                 case 15:
                     message.errorMsg = input.readString();
                     break;
+                case 16:
+                    message.packetType = input.readUInt32();
+                    break;
                 default:
                     input.handleUnknownField(number, this);
             }   
@@ -397,6 +413,9 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
 
         if(message.errorMsg != null)
             output.writeString(15, message.errorMsg, false);
+
+        if(message.packetType != null)
+            output.writeUInt32(16, message.packetType, false);
     }
 
     public String getFieldName(int number)
@@ -418,6 +437,7 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
             case 13: return "meta";
             case 14: return "errorCode";
             case 15: return "errorMsg";
+            case 16: return "packetType";
             default: return null;
         }
     }
@@ -446,6 +466,7 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
         __fieldMap.put("meta", 13);
         __fieldMap.put("errorCode", 14);
         __fieldMap.put("errorMsg", 15);
+        __fieldMap.put("packetType", 16);
     }
     
 }

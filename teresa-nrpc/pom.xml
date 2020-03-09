@@ -111,15 +111,15 @@
                     <baseDir>
                         src/main/java/
                     </baseDir>
-                    <!--<executions>-->
-                        <!--<execution>-->
-                            <!--<id>generate-sources</id>-->
-                            <!--<phase>generate-sources</phase>-->
-                            <!--<goals>-->
-                                <!--<goal>compile</goal>-->
-                            <!--</goals>-->
-                        <!--</execution>-->
-                    <!--</executions>-->
+                    <executions>
+                        <execution>
+                            <id>generate-sources</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </configuration>
             </plugin>
 

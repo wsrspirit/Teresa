@@ -20,13 +20,11 @@ public class ProtobufSerializer implements Serializer {
     }
 
     @Override
-    public byte[] serialize(Object obj) throws Exception {
+    public byte[] serialize(Object obj) {
         LinkedBuffer linkedBuffer = this.linkedBuffer.get();
         Schema schema = getSchema(obj.getClass());
         try {
             return ProtostuffIOUtil.toByteArray(obj,schema,linkedBuffer);
-        }catch(Exception e) {
-            throw new Exception("serialize error:" + e.getMessage(), e);
         } finally {
             linkedBuffer.clear();
         }
@@ -34,54 +32,42 @@ public class ProtobufSerializer implements Serializer {
 
     //这里需要传入linkedBuffer是为了让channelBased使用，默认使用ThreadLocal中的linkedBuffer
     @Override
-    public byte[] serialize(Object obj, LinkedBuffer linkedBuffer) throws Exception {
+    public byte[] serialize(Object obj, LinkedBuffer linkedBuffer) {
         Schema schema = getSchema(obj.getClass());
         try {
             return ProtostuffIOUtil.toByteArray(obj,schema,linkedBuffer);
-        }catch(Exception e) {
-            throw new Exception("serialize error:" + e.getMessage(), e);
         } finally {
             linkedBuffer.clear();
         }
     }
 
     @Override
-    public <T> T deserialize(Class<T> klass, byte[] data) throws Exception {
+    public <T> T deserialize(Class<T> klass, byte[] data) {
         Schema schema = getSchema(klass);
         try {
             T obj = klass.newInstance();
             ProtostuffIOUtil.mergeFrom(data, obj, schema);
             return obj;
-        }catch(Exception e) {
-            throw new Exception( "deserialize error:" + e.getMessage(), e);
+        } catch(Exception e) {
+            throw new RuntimeException( "deserialize error:" + e.getMessage(), e);
         }
     }
 
     @Override
-    public String serializeToString(Object obj) throws Exception {
+    public String serializeToString(Object obj) {
         return null;
     }
 
     @Override
-    public byte[] serializeToString(Object obj, LinkedBuffer linkedBuffer) throws Exception {
-        return new byte[0];
-    }
-
-    @Override
-    public <T> T deserializeFromString(Class<T> klass, String data) throws Exception {
+    public <T> T deserializeFromString(Class<T> klass, String data) {
         return null;
     }
 
 
-    private Schema getSchema(Class klass) throws Exception {
-
+    private Schema getSchema(Class klass) {
         Schema schema = this.cachedSchemas.get(klass);
         if(schema == null) {
-            try {
-                schema = RuntimeSchema.getSchema(klass);
-            } catch (Exception e) {
-                throw new Exception("instantiate class failed:" + e.getMessage(), e);
-            }
+            schema = RuntimeSchema.getSchema(klass);
             this.cachedSchemas.put(klass, schema);
         }
 

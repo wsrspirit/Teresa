@@ -1,13 +1,13 @@
 package com.spirit.teresa.server.server;
 
 import com.dyuproject.protostuff.Message;
+import com.spirit.teresa.server.MethodHandler;
 import com.spirit.teresa.server.ServerRpcHandler;
 import com.spirit.teresa.worker.WorkerService;
 import com.spirit.teresa.codec.AbstractIoPacket;
 import com.spirit.teresa.codec.IoPacketCodec;
 import com.spirit.teresa.registry.RegistryService;
 import com.spirit.teresa.serializer.Serializer;
-import com.spirit.teresa.server.MethodHanler;
 import com.spirit.teresa.server.annotation.ServerMethod;
 import com.spirit.teresa.server.annotation.ServerService;
 import org.apache.commons.collections4.MapUtils;
@@ -26,7 +26,7 @@ import java.util.Map;
 public abstract class AbstractRpcServerService implements RpcServerService,ApplicationContextAware,InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(AbstractRpcServerService.class);
 
-    protected Map<Object, MethodHanler> methodHanlerMap = new HashMap<>();
+    protected Map<Object, MethodHandler> methodHanlerMap = new HashMap<>();
 
     protected String serverAddress;
 
@@ -62,8 +62,8 @@ public abstract class AbstractRpcServerService implements RpcServerService,Appli
                         Class<?> returnType = method.getReturnType();
                         logger.info("load annotation {} method {} cmd {} subcmd {} para {} return {}",serviceBean.getClass(),
                                 method.getName(),cmd,subcmd,parameterTypes[0].getName(),returnType.getName());
-                        MethodHanler methodHanler = new MethodHanler(serviceBean,method,subcmd,parameterTypes,returnType);
-                        methodHanlerMap.put(subcmd,methodHanler);
+                        MethodHandler methodHandler = new MethodHandler(serviceBean,method,subcmd,parameterTypes,returnType);
+                        methodHanlerMap.put(subcmd, methodHandler);
                     }
                 }
             }

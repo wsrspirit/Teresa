@@ -4,32 +4,27 @@ import com.dyuproject.protostuff.LinkedBuffer;
 
 public class JsonSerializer implements Serializer {
     @Override
-    public byte[] serialize(Object obj) throws Exception {
+    public byte[] serialize(Object obj) {
         return new byte[0];
     }
 
     @Override
-    public byte[] serialize(Object obj, LinkedBuffer linkedBuffer) throws Exception {
+    public byte[] serialize(Object obj, LinkedBuffer linkedBuffer) {
         return new byte[0];
     }
 
     @Override
-    public <T> T deserialize(Class<T> klass, byte[] data) throws Exception {
+    public <T> T deserialize(Class<T> klass, byte[] data) {
         return null;
     }
 
     @Override
-    public String serializeToString(Object obj) throws Exception {
+    public String serializeToString(Object obj) {
         return null;
     }
 
     @Override
-    public byte[] serializeToString(Object obj, LinkedBuffer linkedBuffer) throws Exception {
-        return new byte[0];
-    }
-
-    @Override
-    public <T> T deserializeFromString(Class<T> klass, String data) throws Exception {
+    public <T> T deserializeFromString(Class<T> klass, String data) {
         return null;
     }
 }

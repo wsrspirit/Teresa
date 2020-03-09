@@ -18,6 +18,7 @@ import com.spirit.teresa.codec.AbstractIoPacket;
 import com.spirit.teresa.codec.IoPacket;
 import com.spirit.teresa.serializer.Serializer;
 import com.spirit.teresa.utils.U;
+import org.springframework.beans.BeanUtils;
 
 public final class NrpcPacket extends AbstractIoPacket implements Externalizable, Message<NrpcPacket>, Schema<NrpcPacket>
 {
@@ -174,26 +175,29 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
     }
 
     @Override
-    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) throws Exception {
-        NrpcPacket nrpcPacket = (NrpcPacket) reqPacket;
+    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) {
+        NrpcPacket responsePacket = new NrpcPacket();
+        BeanUtils.copyProperties(((NrpcPacket) reqPacket).getHead(),responsePacket.getHead());
+        responsePacket.setRouterAddr(reqPacket.getRouterAddr());
+
         byte[] bytes = U.EMPTY_BYTES;
         if (body != null && serializer != null) {
             bytes = serializer.serialize(body);
         }
-        nrpcPacket.setErrCode(ec);
-        nrpcPacket.setErrMsg(message);
-        nrpcPacket.setBody(ByteString.copyFrom(bytes));
-        return nrpcPacket;
+        responsePacket.setErrCode(ec);
+        responsePacket.setErrMsg(message);
+        responsePacket.setBody(ByteString.copyFrom(bytes));
+        responsePacket.setRequest(false);
+        return responsePacket;
     }
 
     @Override
-    public Object getContent(Class clazz, Serializer serializer) throws Exception {
-        Object request = serializer.deserialize(clazz,body.toByteArray());
-        return request;
+    public Object getContent(Class clazz, Serializer serializer) {
+        return serializer.deserialize(clazz,body.toByteArray());
     }
 
     @Override
-    public void setContent(Object content, Serializer serializer) throws Exception {
+    public void setContent(Object content, Serializer serializer) {
         this.content = content;
         this.body = ByteString.copyFrom(serializer.serialize(content));
     }
@@ -227,5 +231,15 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
     @Override
     public void setSeq(Long seq) {
         head.setSeq(seq);
+    }
+
+    @Override
+    public boolean isRequest() {
+        return head.getPacketType() == 1;
+    }
+
+    @Override
+    public void setRequest(boolean request) {
+        head.setPacketType(request ? 1 : 0);
     }
 }

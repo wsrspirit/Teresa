@@ -6,16 +6,14 @@ import com.dyuproject.protostuff.LinkedBuffer;
 public interface Serializer {
 
     //for Binary
-    byte[] serialize(Object obj) throws Exception;
+    byte[] serialize(Object obj);
 
-    byte[] serialize(Object obj, LinkedBuffer linkedBuffer) throws Exception;
+    byte[] serialize(Object obj, LinkedBuffer linkedBuffer);
 
-    <T> T deserialize(Class<T> klass, byte[] data) throws Exception;
+    <T> T deserialize(Class<T> klass, byte[] data);
 
     //for Json
-    String serializeToString(Object obj) throws Exception;
+    String serializeToString(Object obj);
 
-    byte[] serializeToString(Object obj, LinkedBuffer linkedBuffer) throws Exception;
-
-    <T> T deserializeFromString(Class<T> klass, String data) throws Exception;
+    <T> T deserializeFromString(Class<T> klass, String data);
 }

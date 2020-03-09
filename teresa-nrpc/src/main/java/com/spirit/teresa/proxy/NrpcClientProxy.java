@@ -46,6 +46,7 @@ public class NrpcClientProxy extends ClientProxy {
         request.setContent(args[0],serializer);
         RouterInfo routerInfo = ((AbstractRpcClientService)rpcClientService).getRouterService().route(bigCmd);
         request.setRouterAddr(routerInfo.getSocketAddress());
+        request.setRequest(true);
 
         try {
             if (async){

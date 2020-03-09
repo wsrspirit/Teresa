@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Netty连接池管理者，用于根据addr从池子中获取连接池
+ * todo 可以单例化
  */
 public class RpcChannelManager extends AbstractChannelPoolMap<InetSocketAddress, FixedChannelPool> {
     private Bootstrap bootstrap;
