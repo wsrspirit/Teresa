@@ -23,7 +23,7 @@ public class NrpcClientTest {
 
     public static void testSync(DemoNrpcService demoService) {
         NrpcPacket request = new NrpcPacket();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             AddExperienceRsp addExperienceRsp = demoService.addExp(req,request);
             logger.debug("index {} rsp level {} result {}",i,addExperienceRsp.getLevel(),addExperienceRsp.getResult());
         }

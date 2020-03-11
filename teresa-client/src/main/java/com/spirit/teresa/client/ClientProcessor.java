@@ -9,11 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ClientProcessor implements Processor<IoPacket,IoPacket> {
-    private RpcChannelManager channelManager;
     private static final Logger logger = LoggerFactory.getLogger(ClientProcessor.class);
+    private RpcChannelManager channelManager;
+
+    public ClientProcessor(RpcChannelManager channelManager) {
+        this.channelManager = channelManager;
+    }
+
     @Override
     public IoPacket process(IoPacket ioPacket, Channel ioChannel) {
-
         SendPacketFuture<IoPacket> future = (SendPacketFuture<IoPacket>) channelManager.remove(ioChannel.remoteAddress(),ioPacket.getSeq());
         if (future == null) {
             logger.error("subCmd {} seq {} routerId {} response can not find it's future could not be found, mostly because remote server rpc timeout"

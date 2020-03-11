@@ -3,6 +3,7 @@ package com.spirit.teresa.config;
 import com.spirit.teresa.codec.NrpcPackageCodec;
 import com.spirit.teresa.serializer.JsonSerializer;
 import com.spirit.teresa.serializer.ProtobufSerializer;
+import com.spirit.teresa.utils.U;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -20,8 +21,6 @@ public class NrpcCodecConfigRegistrar implements ImportBeanDefinitionRegistrar {
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
                 .getAnnotationAttributes(NrpcCodecConfig.class.getName()));
         SerializerEnum serializerEnum = attributes.getEnum("serializer");
-//        String serializer = attributes.getString("serializer");
-
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(NrpcPackageCodec.class);
 
         switch (serializerEnum) {
@@ -41,6 +40,6 @@ public class NrpcCodecConfigRegistrar implements ImportBeanDefinitionRegistrar {
         }
 
         BeanDefinition definition = beanDefinitionBuilder.getBeanDefinition();
-        registry.registerBeanDefinition("ioPacketCodec", definition);
+        registry.registerBeanDefinition(U.IO_PACKET_CODEC_BEAN_NAME, definition);
     }
 }
