@@ -40,7 +40,7 @@ public class ThreadPoolWorkerService extends AbstractWorkerService {
 	public void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter) {
 		executor.execute(() -> {
 			try {
-				taskHandler.handler(ch, msg, processor, packetLimiter);
+				invocationHandler.handler(ch, msg, processor, packetLimiter);
 			} catch (SuspendExecution suspendExecution) {
 				logger.error("thread mode should not accure this err, make sure you use quasar agent with use CoroutineWorkerService");
 			}

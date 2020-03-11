@@ -2,7 +2,14 @@ package com.spirit.teresa.client.spring.config;
 
 import com.spirit.teresa.client.TcpRpcClient;
 import com.spirit.teresa.client.UdpRpcClient;
+import com.spirit.teresa.codec.IoPacketCodec;
 import com.spirit.teresa.config.ProtocolEnum;
+import com.spirit.teresa.route.RouterService;
+import com.spirit.teresa.timeout.DefaultTimeoutManager;
+import com.spirit.teresa.timeout.TimeoutManager;
+import com.spirit.teresa.utils.U;
+import com.spirit.teresa.worker.WorkerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -19,14 +26,19 @@ public class ClientConfigRegistrar implements ImportBeanDefinitionRegistrar {
         ProtocolEnum protocol = attributes.getEnum("protocol");
         BeanDefinition definition ;
 
+        BeanDefinitionBuilder beanDefinitionBuilder;
         if (protocol.equals(ProtocolEnum.UDP)) {
-            definition = BeanDefinitionBuilder.genericBeanDefinition(UdpRpcClient.class).getBeanDefinition();
+            beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(UdpRpcClient.class);
         } else {
-            definition = BeanDefinitionBuilder.genericBeanDefinition(TcpRpcClient.class).getBeanDefinition();
+            beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(TcpRpcClient.class);
         }
 
+        beanDefinitionBuilder.addPropertyReference(U.ROUTER_SERVICE_BEAN_NAME,U.ROUTER_SERVICE_BEAN_NAME);
+        beanDefinitionBuilder.addPropertyReference(U.IO_PACKET_CODEC_BEAN_NAME,U.IO_PACKET_CODEC_BEAN_NAME);
+        beanDefinitionBuilder.addPropertyReference(U.WORKER_SERVICE_BEAN_NAME, U.WORKER_SERVICE_BEAN_NAME);
+        definition = beanDefinitionBuilder.getBeanDefinition();
         definition.getPropertyValues().add("connectTimeout", connectTimeout);
 
-        registry.registerBeanDefinition("rpcClient", definition);
+        registry.registerBeanDefinition(U.RPC_CLIENT_BEAN_NAME, definition);
     }
 }

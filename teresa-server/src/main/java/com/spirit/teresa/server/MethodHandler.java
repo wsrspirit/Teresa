@@ -5,14 +5,14 @@ import com.spirit.teresa.serializer.Serializer;
 
 import java.lang.reflect.Method;
 
-public class MethodHanler {
+public class MethodHandler {
     private Object object;
     private Method method;
     private Object subCmd;
     private Class[] parameterType;
     private Class returnType;
 
-    public MethodHanler(Object object, Method method, Object subCmd, Class[] parameterType, Class returnType) {
+    public MethodHandler(Object object, Method method, Object subCmd, Class[] parameterType, Class returnType) {
         this.object = object;
         this.method = method;
         this.subCmd = subCmd;
@@ -52,7 +52,7 @@ public class MethodHanler {
 
     @Override
     public String toString() {
-        return "MethodHanler{" +
+        return "MethodHandler{" +
                 "object=" + object +
                 ", method=" + method +
                 ", subCmd=" + subCmd +

@@ -74,7 +74,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     }
 
     @Override
-    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) throws Exception {
+    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) {
         ILiveRequest request = (ILiveRequest) reqPacket;
         byte[] bytes = U.EMPTY_BYTES;
         if (body != null && serializer != null) {
@@ -91,13 +91,13 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     }
 
     @Override
-    public Object getContent(Class clazz, Serializer serializer) throws Exception {
+    public Object getContent(Class clazz, Serializer serializer) {
         Object request = serializer.deserialize(clazz,getEx().toByteArray());
         return request;
     }
 
     @Override
-    public void setContent(Object content,Serializer serializer) throws Exception {
+    public void setContent(Object content,Serializer serializer) {
         this.content = content;
         setEx(ByteString.copyFrom(serializer.serialize(content)));
     }
@@ -330,6 +330,15 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
         this.originalAuthAppid = originalAuthAppid;
     }
 
+    @Override
+    public boolean isRequest() {
+        return true;
+    }
+
+    @Override
+    public void setRequest(boolean isRequest) {
+
+    }
     // java serialization
 
     public void readExternal(ObjectInput in) throws IOException

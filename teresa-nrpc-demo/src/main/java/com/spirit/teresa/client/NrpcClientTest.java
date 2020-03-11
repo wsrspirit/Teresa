@@ -10,19 +10,21 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class NrpcClientTest {
     private static final Logger logger = LoggerFactory.getLogger(NrpcClientTest.class);
-
+    private static AddExperienceReq req;
     public static void main(String[] args) {
+        req = new AddExperienceReq();
+        req.setOrderNo("test");
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(TeresaClientConfig.class);
         //使用注解形式实现
         DemoNrpcService demoService = (DemoNrpcService) applicationContext.getBean("demoNrpcService");
         testSync(demoService);
-        testAsync(demoService);
+//        testAsync(demoService);
     }
 
     public static void testSync(DemoNrpcService demoService) {
         NrpcPacket request = new NrpcPacket();
         for (int i = 0; i < 5; i++) {
-            AddExperienceRsp addExperienceRsp = demoService.addExp(new AddExperienceReq(),request);
+            AddExperienceRsp addExperienceRsp = demoService.addExp(req,request);
             logger.debug("index {} rsp level {} result {}",i,addExperienceRsp.getLevel(),addExperienceRsp.getResult());
         }
     }
@@ -41,7 +43,7 @@ public class NrpcClientTest {
         for (int i = 0; i < 5; i++) {
             NrpcPacket request = new NrpcPacket();
             int index = i;
-            Flowable<AddExperienceRsp> flowable = demoService.addExpAsync(new AddExperienceReq(),request);
+            Flowable<AddExperienceRsp> flowable = demoService.addExpAsync(req,request);
             flowable.subscribe(addExperienceRsp -> {
                 logger.debug("index {} rsp level {} result {}",index,addExperienceRsp.getLevel(),addExperienceRsp.getResult());
             },throwable -> {

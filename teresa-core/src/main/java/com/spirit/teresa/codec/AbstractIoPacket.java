@@ -104,6 +104,4 @@ public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T
     public void setSubcmd(Object subcmd) {
         this.subcmd = subcmd;
     }
-
-
 }

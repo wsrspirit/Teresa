@@ -8,7 +8,9 @@ import com.spirit.teresa.route.RouterInfo;
 import com.spirit.teresa.route.RouterService;
 import com.spirit.teresa.codec.IoPacket;
 import com.spirit.teresa.codec.IoPacketCodec;
+import com.spirit.teresa.timeout.DefaultTimeoutManager;
 import com.spirit.teresa.timeout.TimeoutManager;
+import com.spirit.teresa.worker.WorkerService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.pool.FixedChannelPool;
@@ -21,12 +23,13 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
 
     protected int connectTimeout = 10000;
     private static final Logger logger = LoggerFactory.getLogger(AbstractRpcClientService.class);
-    @Autowired
     protected TimeoutManager timeoutManager;
     @Autowired
     protected RouterService routerService;
     @Autowired
     protected IoPacketCodec ioPacketCodec;
+    @Autowired
+    protected WorkerService workerService;
 
     protected ClientRpcHandler rpcHandler;
     protected Bootstrap bootstrap;
@@ -34,7 +37,7 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
     protected SendPacketFutureFactory sendPacketFutureFactory;
 
     public AbstractRpcClientService() {
-        this.rpcHandler = new ClientRpcHandler();
+        timeoutManager = new DefaultTimeoutManager();
     }
 
     @Override
@@ -102,8 +105,17 @@ public abstract class AbstractRpcClientService<T_REQ extends IoPacket,T_RSP exte
         this.ioPacketCodec = ioPacketCodec;
     }
 
+    public WorkerService getWorkerService() {
+        return workerService;
+    }
+
+    public void setWorkerService(WorkerService workerService) {
+        this.workerService = workerService;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
+        this.rpcHandler = new ClientRpcHandler(workerService);
         start();
     }
 }

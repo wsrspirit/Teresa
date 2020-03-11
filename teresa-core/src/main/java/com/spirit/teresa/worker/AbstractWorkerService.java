@@ -1,8 +1,8 @@
 package com.spirit.teresa.worker;
 
 import com.spirit.teresa.codec.IoPacket;
-import com.spirit.teresa.handler.DefaultTaskHandler;
-import com.spirit.teresa.handler.TaskHandler;
+import com.spirit.teresa.handler.DefaultInvocationHandler;
+import com.spirit.teresa.handler.InvocationHandler;
 import com.spirit.teresa.limiter.DefaultPacketLimiter;
 import com.spirit.teresa.limiter.IoPacketLimiter;
 import com.spirit.teresa.processor.Processor;
@@ -20,14 +20,14 @@ public abstract class AbstractWorkerService implements WorkerService{
      */
     private IoPacketLimiter limiter;
     private static final Logger logger = LoggerFactory.getLogger(AbstractWorkerService.class);
-    protected TaskHandler taskHandler;
+    protected InvocationHandler invocationHandler;
     public AbstractWorkerService() {
         this(new DefaultPacketLimiter());
     }
 
     public AbstractWorkerService(IoPacketLimiter limiter) {
         this.limiter = limiter;
-        this.taskHandler = new DefaultTaskHandler();
+        this.invocationHandler = new DefaultInvocationHandler();
     }
 
     public abstract void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter);

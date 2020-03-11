@@ -35,7 +35,7 @@
 
     <!--<bean id="protoBufSerializer" class="ProtobufSerializer"/>-->
 
-    <bean id="timeoutManager" class="com.spirit.teresa.timeout.DefaultTimeoutManager"/>
+    <!--<bean id="timeoutManager" class="com.spirit.teresa.timeout.DefaultTimeoutManager"/>-->
 
     <!--bean can be created by xml, but not recommended-->
     <!--<bean id="demoService" class="ClientFactoryBean">-->

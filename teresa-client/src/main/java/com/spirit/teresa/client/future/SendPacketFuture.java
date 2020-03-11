@@ -60,15 +60,15 @@ public class SendPacketFuture<V> implements IoPacketFuture<V> {
         return ioPacket.getErrorMsg();
     }
 
-    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) throws Exception {
+    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) {
         return ioPacket.newResponsePacket(reqPacket, ec, message, body,serializer);
     }
 
-    public Object getContent(Class clazz, Serializer serializer) throws Exception {
+    public Object getContent(Class clazz, Serializer serializer) {
         return ioPacket.getContent(clazz, serializer);
     }
 
-    public void setContent(Object content, Serializer serializer) throws Exception {
+    public void setContent(Object content, Serializer serializer) {
         ioPacket.setContent(content,serializer);
     }
 

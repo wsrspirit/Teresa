@@ -26,10 +26,24 @@ public interface IoPacket<T extends IoPacket> {
 
 	String getErrorMsg();
 
-	T newResponsePacket(T reqPacket, int ec, String message, Object body, Serializer serializer) throws Exception;
+	/**
+	 * fixme should not throw checked exception
+	 * @param reqPacket
+	 * @param ec
+	 * @param message
+	 * @param body
+	 * @param serializer
+	 * @return
+	 * @throws Exception
+	 */
+	T newResponsePacket(T reqPacket, int ec, String message, Object body, Serializer serializer);
 
-	Object getContent(Class clazz, Serializer serializer) throws Exception;
+	Object getContent(Class clazz, Serializer serializer);
 
-	void setContent(Object content,Serializer serializer) throws Exception;
+	void setContent(Object content,Serializer serializer);
+
+	boolean isRequest();
+
+	void setRequest(boolean isRequest);
 
 }

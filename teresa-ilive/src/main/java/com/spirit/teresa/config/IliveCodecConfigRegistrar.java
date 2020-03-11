@@ -38,6 +38,6 @@ public class IliveCodecConfigRegistrar implements ImportBeanDefinitionRegistrar 
         BeanDefinition definition = beanDefinitionBuilder.getBeanDefinition();
         definition.getPropertyValues().add("client", isClient);
 
-        registry.registerBeanDefinition("ioPacketCodec", definition);
+        registry.registerBeanDefinition(U.IO_PACKET_CODEC_BEAN_NAME, definition);
     }
 }
