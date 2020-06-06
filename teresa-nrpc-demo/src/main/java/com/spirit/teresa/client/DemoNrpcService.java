@@ -7,7 +7,7 @@ import com.spirit.teresa.pb.AddExperienceReq;
 import com.spirit.teresa.pb.AddExperienceRsp;
 import io.reactivex.Flowable;
 
-@ClientService(bigCmd = "123",proxy = "nrpcClientProxy",client = "rpcClient")
+@ClientService(bigCmd = "123",proxy = "clientProxy",client = "rpcClient")
 public interface DemoNrpcService {
     @ClientMethod(subCmd = "addExp",timeout = 800000000)
     AddExperienceRsp addExp(AddExperienceReq req, NrpcPacket request);

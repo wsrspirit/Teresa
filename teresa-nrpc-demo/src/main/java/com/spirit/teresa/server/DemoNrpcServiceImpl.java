@@ -18,15 +18,13 @@ public class DemoNrpcServiceImpl implements DemoNrpcService {
     @Override
     @ServerMethod(subcmd = "addExp")
     public AddExperienceRsp addExp(AddExperienceReq req, NrpcPacket request) {
-//        AddExperienceRsp rsp = new AddExperienceRsp();
-//
-//
-//        rsp.setLevel(request.getSeq().intValue());
-//        rsp.setResult(44444);
-//
-//        logger.info("DemoNrpcServiceImpl seq {} req {} rsp {}",request.getSeq(),req,rsp);
-//        return rsp;
-        throw new RuntimeException("asdasdasdasdasd");
+        AddExperienceRsp rsp = new AddExperienceRsp();
+        rsp.setLevel((int) request.getSeq());
+        rsp.setResult(44444);
+
+        logger.info("DemoNrpcServiceImpl seq {} req {} rsp {}",request.getSeq(),req,rsp);
+        return rsp;
+//        throw new RuntimeException("asdasdasdasdasd");
     }
 
     @Override

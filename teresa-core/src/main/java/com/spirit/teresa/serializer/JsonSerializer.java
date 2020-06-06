@@ -17,14 +17,4 @@ public class JsonSerializer implements Serializer {
     public <T> T deserialize(Class<T> klass, byte[] data) {
         return null;
     }
-
-    @Override
-    public String serializeToString(Object obj) {
-        return null;
-    }
-
-    @Override
-    public <T> T deserializeFromString(Class<T> klass, String data) {
-        return null;
-    }
 }

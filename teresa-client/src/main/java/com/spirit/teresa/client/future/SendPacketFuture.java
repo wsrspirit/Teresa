@@ -24,55 +24,6 @@ public class SendPacketFuture<V> implements IoPacketFuture<V> {
         this.ioPacket = ioPacket;
     }
 
-    public Object getSeq() {
-        return ioPacket.getSeq();
-    }
-
-    public Object getSubcmd() {
-        return ioPacket.getSubcmd();
-    }
-
-    public long getCreateTime() {
-        return ioPacket.getCreateTime();
-    }
-
-    public Object getRouterId() {
-        return ioPacket.getRouterId();
-    }
-
-    public InetSocketAddress getRouterAddr() {
-        return ioPacket.getRouterAddr();
-    }
-
-    public void setRouterAddr(InetSocketAddress addr) {
-        ioPacket.setRouterAddr(addr);
-    }
-
-    public int getEstimateSize() {
-        return ioPacket.getEstimateSize();
-    }
-
-    public long getRetCode() {
-        return ioPacket.getRetCode();
-    }
-
-    public String getErrorMsg() {
-        return ioPacket.getErrMsg();
-    }
-
-    public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) {
-        return ioPacket.newResponsePacket(reqPacket, ec, message, body,serializer);
-    }
-
-    public Object getContent(Class clazz, Serializer serializer) {
-        return ioPacket.getContent(clazz, serializer);
-    }
-
-    public void setContent(Object content, Serializer serializer) {
-        ioPacket.setContent(content,serializer);
-    }
-
-
     public IoPacket getIoPacket() {
         return ioPacket;
     }

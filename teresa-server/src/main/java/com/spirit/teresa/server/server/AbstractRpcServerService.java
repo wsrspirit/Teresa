@@ -60,7 +60,7 @@ public abstract class AbstractRpcServerService implements RpcServerService,Appli
                             stop();
                         }
                         Class<?> returnType = method.getReturnType();
-                        logger.info("load annotation {} method {} cmd {} subcmd {} para {} return {}",serviceBean.getClass(),
+                        logger.info("load annotation {} method {} cmd {} subCmd {} para {} return {}",serviceBean.getClass(),
                                 method.getName(),cmd,subcmd,parameterTypes[0].getName(),returnType.getName());
                         MethodHandler methodHandler = new MethodHandler(serviceBean,method,subcmd,parameterTypes,returnType);
                         methodHanlerMap.put(subcmd, methodHandler);

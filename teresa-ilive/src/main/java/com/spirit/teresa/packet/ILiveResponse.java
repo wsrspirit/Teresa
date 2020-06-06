@@ -32,7 +32,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     
     private Integer version;
 //    private Integer subCmd;
-//    private Integer subcmd;
+//    private Integer subCmd;
 //    private Long seq;
     private Long uid;
     private Integer errCode;
@@ -45,7 +45,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     public ILiveResponse(ILiveRequest request) {
         this.version = request.getVersion();
         this.cmd = request.getCmd();
-        this.subcmd = request.getSubcmd();
+        this.subCmd = request.getSubCmd();
         this.seq = request.getSeq();
         this.uid = request.getUid();
         this.clientType = request.getClientType();
@@ -89,15 +89,13 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     }
 
     @Override
-    public Object getContent(Class clazz, Serializer serializer) {
-        Object response = serializer.deserialize(clazz,getEx().toByteArray());
-        return response;
+    public void setBizContentBytes(byte[] bizContentBytes) {
+        setEx(ByteString.copyFrom(bizContentBytes));
     }
 
     @Override
-    public void setContent(Object content,Serializer serializer) {
-        this.content = content;
-        setEx(ByteString.copyFrom(serializer.serialize(content)));
+    public byte[] getBizContentBytes() {
+        return getEx().toByteArray();
     }
 
     // uid
@@ -255,7 +253,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
                     message.cmd = input.readUInt32();
                     break;
                 case 3:
-                    message.subcmd = input.readUInt32();
+                    message.subCmd = input.readUInt32();
                     break;
                 case 4:
                     message.seq = input.readUInt64();
@@ -296,8 +294,8 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
         if(message.cmd != null)
             output.writeUInt32(2, (Integer) message.cmd, false);
 
-        if(message.subcmd != null)
-            output.writeUInt32(3, (Integer) message.subcmd, false);
+        if(message.subCmd != null)
+            output.writeUInt32(3, (Integer) message.subCmd, false);
 
         if(message.seq != null)
             output.writeUInt64(4, message.seq, false);
@@ -330,7 +328,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
         {
             case 1: return "version";
             case 2: return "subCmd";
-            case 3: return "subcmd";
+            case 3: return "subCmd";
             case 4: return "seq";
             case 5: return "uid";
             case 6: return "errCode";
@@ -354,7 +352,7 @@ public final class ILiveResponse extends AbstractIoPacket implements Externaliza
     {
         __fieldMap.put("version", 1);
         __fieldMap.put("subCmd", 2);
-        __fieldMap.put("subcmd", 3);
+        __fieldMap.put("subCmd", 3);
         __fieldMap.put("seq", 4);
         __fieldMap.put("uid", 5);
         __fieldMap.put("errCode", 6);

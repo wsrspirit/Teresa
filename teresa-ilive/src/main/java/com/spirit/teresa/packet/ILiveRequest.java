@@ -32,7 +32,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     
     private Integer version;
 //    private Integer subCmd;
-//    private Integer subcmd;
+//    private Integer subCmd;
 //    private Long seq;
     private Long uid;
     private ByteString binaryBody;
@@ -91,15 +91,13 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     }
 
     @Override
-    public Object getContent(Class clazz, Serializer serializer) {
-        Object request = serializer.deserialize(clazz,getEx().toByteArray());
-        return request;
+    public void setBizContentBytes(byte[] bizContentBytes) {
+        setEx(ByteString.copyFrom(bizContentBytes));
     }
 
     @Override
-    public void setContent(Object content,Serializer serializer) {
-        this.content = content;
-        setEx(ByteString.copyFrom(serializer.serialize(content)));
+    public byte[] getBizContentBytes() {
+        return getEx().toByteArray();
     }
 
     // uid
@@ -400,7 +398,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
                     message.cmd = input.readUInt32();
                     break;
                 case 3:
-                    message.subcmd = input.readUInt32();
+                    message.subCmd = input.readUInt32();
                     break;
                 case 4:
                     message.seq = input.readUInt64();
@@ -479,8 +477,8 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
             output.writeUInt32(2, cmd, false);
         }
 
-        if(message.subcmd != null) {
-            int subCmd = Integer.valueOf((String)message.subcmd);
+        if(message.subCmd != null) {
+            int subCmd = Integer.valueOf((String)message.subCmd);
             output.writeUInt32(3, subCmd, false);
         }
 
@@ -551,7 +549,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
         {
             case 1: return "version";
             case 2: return "subCmd";
-            case 3: return "subcmd";
+            case 3: return "subCmd";
             case 4: return "seq";
             case 5: return "uid";
             case 6: return "binaryBody";
@@ -587,7 +585,7 @@ public final class ILiveRequest extends AbstractIoPacket implements Externalizab
     {
         __fieldMap.put("version", 1);
         __fieldMap.put("subCmd", 2);
-        __fieldMap.put("subcmd", 3);
+        __fieldMap.put("subCmd", 3);
         __fieldMap.put("seq", 4);
         __fieldMap.put("uid", 5);
         __fieldMap.put("binaryBody", 6);
