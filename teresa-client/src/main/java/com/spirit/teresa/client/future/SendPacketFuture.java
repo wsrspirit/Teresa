@@ -57,7 +57,7 @@ public class SendPacketFuture<V> implements IoPacketFuture<V> {
     }
 
     public String getErrorMsg() {
-        return ioPacket.getErrorMsg();
+        return ioPacket.getErrMsg();
     }
 
     public IoPacket newResponsePacket(IoPacket reqPacket, int ec, String message, Object body, Serializer serializer) {

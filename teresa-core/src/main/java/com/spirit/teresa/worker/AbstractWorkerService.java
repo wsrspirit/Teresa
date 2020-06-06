@@ -6,7 +6,7 @@ import com.spirit.teresa.handler.InvocationHandler;
 import com.spirit.teresa.limiter.DefaultPacketLimiter;
 import com.spirit.teresa.limiter.IoPacketLimiter;
 import com.spirit.teresa.processor.Processor;
-import com.spirit.teresa.utils.CommonErr;
+import com.spirit.teresa.utils.ErrorCode;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public abstract class AbstractWorkerService implements WorkerService{
         } else {
             IoPacket rsp = null;
             try {
-                rsp = msg.newResponsePacket(msg, CommonErr.PACKET_OVER_FLOW.errCode, CommonErr.PACKET_OVER_FLOW.errMsg, null,null);
+                rsp = msg.newResponsePacket(msg, ErrorCode.PACKET_OVER_FLOW.errCode, ErrorCode.PACKET_OVER_FLOW.errMsg, null,null);
             } catch (Exception e) {
                 logger.error("server flow over limit, but new response err!!! {}",e);
             }

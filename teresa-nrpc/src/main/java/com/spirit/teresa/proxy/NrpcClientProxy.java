@@ -4,9 +4,11 @@ import com.spirit.teresa.client.client.AbstractRpcClientService;
 import com.spirit.teresa.client.TcpRpcClient;
 import com.spirit.teresa.client.future.IoPacketFuture;
 import com.spirit.teresa.client.spring.ClientProxy;
+import com.spirit.teresa.exception.TeresaException;
 import com.spirit.teresa.packet.NrpcPacket;
 import com.spirit.teresa.route.RouterInfo;
 import com.spirit.teresa.serializer.Serializer;
+import com.spirit.teresa.utils.ErrorCode;
 import io.reactivex.Flowable;
 import io.reactivex.processors.ReplayProcessor;
 import org.slf4j.Logger;
@@ -73,10 +75,13 @@ public class NrpcClientProxy extends ClientProxy {
             } else {
                 NrpcPacket rsp = (NrpcPacket)rpcClientService.sync(request,timeout);
                 byte[] bytes = rsp.getBody().toByteArray();
+                if (rsp.getRetCode() != ErrorCode.SUCCESS.getErrCode()) {
+                    throw new TeresaException(rsp.getRetCode(),rsp.getErrMsg());
+                }
                 return serializer.deserialize(method.getReturnType(),bytes);
             }
         } catch (Exception e) {
-            logger.error("do client rpc method err: ",e);
+            logger.error("do client rpc method err: ",e.getMessage());
             throw e;
         }
     }

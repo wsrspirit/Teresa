@@ -9,20 +9,19 @@ public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T
     protected Long createTime;
     protected Object routerId;
     protected InetSocketAddress routerAddr;
-    protected Integer errCode;
+    protected int retCode;
     protected String errMsg;
     protected Integer estimateSize;
     protected Object content;
 
 
     @Override
-    public long getRetCode() {
-        return 0;
+    public int getRetCode() {
+        return retCode;
     }
 
-    @Override
-    public String getErrorMsg() {
-        return null;
+    public void setRetCode(int retCode) {
+        this.retCode = retCode;
     }
 
     @Override
@@ -69,14 +68,6 @@ public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T
     @Override
     public void setRouterAddr(InetSocketAddress routerAddr) {
         this.routerAddr = routerAddr;
-    }
-
-    public Integer getErrCode() {
-        return errCode;
-    }
-
-    public void setErrCode(Integer errCode) {
-        this.errCode = errCode;
     }
 
     public String getErrMsg() {
