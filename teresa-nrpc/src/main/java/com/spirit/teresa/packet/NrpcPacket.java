@@ -184,7 +184,7 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
         if (body != null && serializer != null) {
             bytes = serializer.serialize(body);
         }
-        responsePacket.setErrCode(ec);
+        responsePacket.setRetCode(ec);
         responsePacket.setErrMsg(message);
         responsePacket.setBody(ByteString.copyFrom(bytes));
         responsePacket.setRequest(false);
@@ -241,5 +241,25 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
     @Override
     public void setRequest(boolean request) {
         head.setPacketType(request ? 1 : 0);
+    }
+
+    @Override
+    public int getRetCode() {
+        return head.getErrorCode();
+    }
+
+    @Override
+    public void setRetCode(int retCode) {
+        head.setErrorCode(retCode);
+    }
+
+    @Override
+    public String getErrMsg() {
+        return head.getErrorMsg();
+    }
+
+    @Override
+    public void setErrMsg(String errMsg) {
+        head.setErrorMsg(errMsg);
     }
 }

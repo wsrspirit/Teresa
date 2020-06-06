@@ -22,9 +22,9 @@ public interface IoPacket<T extends IoPacket> {
 
 	int getEstimateSize();
 
-	long getRetCode();
+	int getRetCode();
 
-	String getErrorMsg();
+	String getErrMsg();
 
 	/**
 	 * fixme should not throw checked exception

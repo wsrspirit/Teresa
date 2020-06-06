@@ -1,9 +1,10 @@
 package com.spirit.teresa.server;
 
 import com.spirit.teresa.codec.IoPacket;
+import com.spirit.teresa.exception.TeresaException;
 import com.spirit.teresa.processor.Processor;
 import com.spirit.teresa.serializer.Serializer;
-import com.spirit.teresa.utils.CommonErr;
+import com.spirit.teresa.utils.ErrorCode;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,20 +30,23 @@ public class ServerProcessor implements Processor<IoPacket,IoPacket> {
             throw new IllegalArgumentException("not find methodHandler for subcmd:" + packet.getSubcmd());
         }
 
+        IoPacket rsp;
+
         try {
-            IoPacket rsp = packet.newResponsePacket(packet, CommonErr.SERVER_INNER_ERR.errCode, CommonErr.SERVER_INNER_ERR.errMsg, null,null);
             //todo beforAspect
             Object obj = methodHandler.invoke(packet,serializer);
-            if (obj != null) {
-                //todo 1.性能优化 2.byte对Json不友好
-                rsp = packet.newResponsePacket(packet,0,"",obj,serializer);
-            }
+
+            //todo 貌似不用做非空判断,protobuf不赞成返回空？语法是否正确呢
+            //todo 1.性能优化 2.byte对Json不友好
+            rsp = packet.newResponsePacket(packet,0,"",obj,serializer);
+
             //todo beforAspect
-            return rsp;
-        } catch (Exception e) {
-            logger.error("error acquire methodHandler invoke" + packet.getCmd(), e);
+        } catch (Throwable e) {
+            logger.error("Throwable error acquire methodHandler invoke cmd: {} err",packet.getCmd(), e);
+            //传递异常信息
+            rsp = packet.newResponsePacket(packet, ErrorCode.SERVER_INNER_ERR.errCode, e.getCause().getMessage(), null,serializer);
         }
 
-        return null;
+        return rsp;
     }
 }
