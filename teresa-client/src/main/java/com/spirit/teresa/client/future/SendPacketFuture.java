@@ -79,7 +79,7 @@ public class SendPacketFuture<V> implements IoPacketFuture<V> {
     }
 
     @Override
-    public void callback() {
+    public void fireCallbackListener() {
         if (callbackListener != null) {
             callbackListener.callback(result);
         }

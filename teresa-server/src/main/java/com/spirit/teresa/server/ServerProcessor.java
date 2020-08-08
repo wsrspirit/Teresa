@@ -5,6 +5,7 @@ import com.spirit.teresa.processor.Processor;
 import com.spirit.teresa.serializer.Serializer;
 import com.spirit.teresa.utils.ErrorCode;
 import io.netty.channel.Channel;
+import io.reactivex.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,23 +30,38 @@ public class ServerProcessor implements Processor<IoPacket,IoPacket> {
             throw new IllegalArgumentException("not find methodHandler for subCmd:" + packet.getSubCmd());
         }
 
-        IoPacket rsp;
+        IoPacket respPacket = null;
 
         try {
             //todo beforAspect
-            Object obj = methodHandler.invoke(packet,serializer);
+            Object invokeRsp = methodHandler.invoke(packet,serializer);
 
-            //todo 貌似不用做非空判断,protobuf不赞成返回空？语法是否正确呢
-            //todo 1.性能优化 2.byte对Json不友好
-            rsp = packet.newResponsePacket(packet,0,"",obj,serializer);
+            if (invokeRsp instanceof Flowable) {
+                ((Flowable) invokeRsp).subscribe(o -> {
+                    Object asyncRsp = packet.newResponsePacket(packet,0,"",o,serializer);
+                    ioChannel.writeAndFlush(asyncRsp);
+                }, throwable -> {
+                    logger.error("Throwable error acquire methodHandler invoke cmd: {} err",packet.getCmd(), throwable);
+                    Object asyncRsp = packet.newResponsePacket(packet, ErrorCode.SERVER_INNER_ERR.errCode, ((Throwable)throwable).getCause().getMessage(), null,serializer);
+                    ioChannel.writeAndFlush(asyncRsp);
+                    }, () -> logger.debug("async write rsp complete"));
+            } else {
+                //todo 貌似不用做非空判断,protobuf不赞成返回空？语法是否正确呢
+                //todo 1.性能优化 2.byte对Json不友好
+                respPacket = packet.newResponsePacket(packet,0,"",invokeRsp,serializer);
+            }
 
             //todo beforAspect
         } catch (Throwable e) {
             logger.error("Throwable error acquire methodHandler invoke cmd: {} err",packet.getCmd(), e);
             //传递异常信息
-            rsp = packet.newResponsePacket(packet, ErrorCode.SERVER_INNER_ERR.errCode, e.getCause().getMessage(), null,serializer);
+            respPacket = packet.newResponsePacket(packet, ErrorCode.SERVER_INNER_ERR.errCode, e.getCause().getMessage(), null,serializer);
+        } finally {
+            if (respPacket != null) {
+                ioChannel.writeAndFlush(respPacket);
+            }
         }
 
-        return rsp;
+        return respPacket;
     }
 }

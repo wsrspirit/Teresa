@@ -48,4 +48,6 @@ public interface IoPacket<T extends IoPacket> {
 
 	void setRequest(boolean isRequest);
 
+	String toString();
+
 }

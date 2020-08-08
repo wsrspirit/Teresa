@@ -7,6 +7,15 @@ public interface IoPacketFuture<V> {
     void setResult(V result);
     V get() throws Exception;
     boolean isDone();
+
+    /**
+     * 设置future的回调函数
+     * @param listener
+     */
     void setCallbackListener(CallbackListener<V> listener);
-    void callback();
+
+    /**
+     * 激活future的回调函数
+     */
+    void fireCallbackListener();
 }

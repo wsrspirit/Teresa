@@ -16,7 +16,7 @@ public class DemoNrpcServiceImpl implements DemoNrpcService {
     private static final Logger logger = LoggerFactory.getLogger(DemoNrpcServiceImpl.class);
 
     @Override
-    @ServerMethod(subcmd = "addExp")
+//    @ServerMethod(subcmd = "addExp")
     public AddExperienceRsp addExp(AddExperienceReq req, NrpcPacket request) {
         AddExperienceRsp rsp = new AddExperienceRsp();
         rsp.setLevel((int) request.getSeq());
@@ -28,7 +28,13 @@ public class DemoNrpcServiceImpl implements DemoNrpcService {
     }
 
     @Override
+    @ServerMethod(subcmd = "addExp")
     public Flowable<AddExperienceRsp> addExpAsync(AddExperienceReq req, NrpcPacket request) {
-        return null;
+        AddExperienceRsp rsp = new AddExperienceRsp();
+        rsp.setLevel((int) request.getSeq());
+        rsp.setResult(44444);
+
+        logger.info("DemoNrpcServiceImpl seq {} req {} rsp {}",request.getSeq(),req,rsp);
+        return Flowable.just(rsp);
     }
 }

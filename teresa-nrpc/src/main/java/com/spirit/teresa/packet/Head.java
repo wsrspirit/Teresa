@@ -468,5 +468,26 @@ public final class Head implements Externalizable, Message<Head>, Schema<Head>
         __fieldMap.put("errorMsg", 15);
         __fieldMap.put("packetType", 16);
     }
-    
+
+    @Override
+    public String toString() {
+        return "Head{" +
+                "version=" + version +
+                ", serviceName='" + serviceName + '\'' +
+                ", serviceCmd='" + serviceCmd + '\'' +
+                ", seq=" + seq +
+                ", uid='" + uid + '\'' +
+                ", clientIp=" + clientIp +
+                ", serverIp=" + serverIp +
+                ", appid=" + appid +
+                ", referer='" + referer + '\'' +
+                ", traceId='" + traceId + '\'' +
+                ", pSpanId='" + pSpanId + '\'' +
+                ", format=" + format +
+                ", meta=" + meta +
+                ", errorCode=" + errorCode +
+                ", errorMsg='" + errorMsg + '\'' +
+                ", packetType=" + packetType +
+                '}';
+    }
 }

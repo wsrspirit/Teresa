@@ -11,6 +11,6 @@ import io.reactivex.Flowable;
 public interface DemoNrpcService {
     @ClientMethod(subCmd = "addExp",timeout = 800000000)
     AddExperienceRsp addExp(AddExperienceReq req, NrpcPacket request);
-    @ClientMethod(subCmd = "addExp",async = true)
+    @ClientMethod(subCmd = "addExp",async = true,timeout = 800000000)
     Flowable<AddExperienceRsp> addExpAsync(AddExperienceReq req, NrpcPacket request);
 }
