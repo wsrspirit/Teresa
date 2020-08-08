@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadPoolWorkerService extends AbstractWorkerService {
 	static final Logger logger = LoggerFactory.getLogger(ThreadPoolWorkerService.class);
-	private static final int DEFAULT_THREAD_COUNT = 16;
 	protected Executor executor;
 
 	public ThreadPoolWorkerService() {
@@ -40,9 +39,11 @@ public class ThreadPoolWorkerService extends AbstractWorkerService {
 	public void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter) {
 		executor.execute(() -> {
 			try {
-				invocationHandler.handler(ch, msg, processor, packetLimiter);
-			} catch (SuspendExecution suspendExecution) {
-				logger.error("thread mode should not accure this err, make sure you use quasar agent with use CoroutineWorkerService");
+				processor.process(msg, ch);
+				packetLimiter.release(ch,msg,processor);
+			} catch (Throwable throwable) {
+				logger.error("ThreadPoolWorkerService dispatch ioPacket processor err",throwable);
+//				logger.error("thread mode should not accure this err, make sure you use quasar agent with use CoroutineWorkerService");
 			}
 		});
 	}

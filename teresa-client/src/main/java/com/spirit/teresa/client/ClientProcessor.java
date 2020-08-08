@@ -26,7 +26,7 @@ public class ClientProcessor implements Processor<IoPacket,IoPacket> {
         }
         future.setResult(ioPacket);
         future.getTimeoutTask().cancel(false);
-        future.callback();
-        return null;
+        future.fireCallbackListener();
+        return future.getIoPacket();
     }
 }

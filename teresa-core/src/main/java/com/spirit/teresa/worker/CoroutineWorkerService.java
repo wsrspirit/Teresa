@@ -24,7 +24,8 @@ public class CoroutineWorkerService extends AbstractWorkerService {
     @Override
     public void doDispatch(Channel ch, IoPacket msg, Processor<IoPacket, IoPacket> processor, IoPacketLimiter packetLimiter) {
         fiberScheduler.newFiber((SuspendableCallable<Void>) () -> {
-            invocationHandler.handler(ch, msg, processor, packetLimiter);
+            processor.process(msg, ch);
+            packetLimiter.release(ch,msg,processor);
             return null;
         }).start();
     }

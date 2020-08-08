@@ -35,6 +35,7 @@ public class NrpcClientTest {
     }
 
     public static void testAsync(DemoNrpcService demoService) {
+
 //        Flowable<AddExperienceRsp> flowable = demoService.addExpAsync(new AddExperienceReq(),request);
 //        flowable.subscribe(addExperienceRsp -> {
 //            logger.debug("single rps rsp level {} result {}",addExperienceRsp.getLevel(),addExperienceRsp.getResult());
@@ -46,8 +47,8 @@ public class NrpcClientTest {
 
 
         for (int i = 0; i < 5; i++) {
-            NrpcPacket request = new NrpcPacket();
             int index = i;
+            NrpcPacket request = new NrpcPacket();
             Flowable<AddExperienceRsp> flowable = demoService.addExpAsync(req,request);
             flowable.subscribe(addExperienceRsp -> {
                 logger.debug("index {} rsp level {} result {}",index,addExperienceRsp.getLevel(),addExperienceRsp.getResult());
@@ -57,6 +58,32 @@ public class NrpcClientTest {
                 logger.debug("{} complete",index);
             });
         }
+
+    }
+
+    public static void testFlowableZip(DemoNrpcService demoService) {
+        NrpcPacket request1 = new NrpcPacket();
+        AddExperienceReq req1 = new AddExperienceReq();
+        req1.setIncrement(123L);
+        Flowable<AddExperienceRsp> flowable1 = demoService.addExpAsync(req1,request1);
+
+        NrpcPacket request2 = new NrpcPacket();
+        AddExperienceReq req2 = new AddExperienceReq();
+        req1.setIncrement(321L);
+
+        Flowable<AddExperienceRsp> flowable2 = demoService.addExpAsync(req2,request2);
+
+        Flowable f = Flowable.zip(flowable1,flowable2,(addExperienceRsp, addExperienceRsp2) -> {
+            logger.debug("1:{} 2:{}",addExperienceRsp,addExperienceRsp2);
+            return addExperienceRsp;
+        });
+        f.subscribe(o -> {
+            logger.debug("asdasd :{}",o);
+        },throwable -> {
+            logger.error("testAsync err: {}",throwable);
+        },() -> {
+            logger.debug("complete");
+        });
     }
 
 //    public static void testGetType(DemoNrpcService demoService) {
