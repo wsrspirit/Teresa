@@ -5,13 +5,12 @@ import java.net.InetSocketAddress;
 public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T>{
     protected Long seq;
     protected Object cmd;
-    protected Object subcmd;
+    protected Object subCmd;
     protected Long createTime;
     protected Object routerId;
     protected InetSocketAddress routerAddr;
     protected int retCode;
     protected String errMsg;
-    protected Integer estimateSize;
     protected Object content;
 
 
@@ -25,11 +24,11 @@ public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T
     }
 
     @Override
-    public Long getSeq() {
+    public long getSeq() {
         return seq;
     }
 
-    public void setSeq(Long seq) {
+    public void setSeq(long seq) {
         this.seq = seq;
     }
 
@@ -79,20 +78,11 @@ public abstract class AbstractIoPacket<T extends IoPacket> implements IoPacket<T
     }
 
     @Override
-    public int getEstimateSize() {
-        return estimateSize != null ? estimateSize : 0;
+    public Object getSubCmd() {
+        return subCmd;
     }
 
-    public void setEstimateSize(Integer estimateSize) {
-        this.estimateSize = estimateSize;
-    }
-
-    @Override
-    public Object getSubcmd() {
-        return subcmd;
-    }
-
-    public void setSubcmd(Object subcmd) {
-        this.subcmd = subcmd;
+    public void setSubCmd(Object subCmd) {
+        this.subCmd = subCmd;
     }
 }

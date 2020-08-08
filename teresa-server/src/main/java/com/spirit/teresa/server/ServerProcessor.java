@@ -1,7 +1,6 @@
 package com.spirit.teresa.server;
 
 import com.spirit.teresa.codec.IoPacket;
-import com.spirit.teresa.exception.TeresaException;
 import com.spirit.teresa.processor.Processor;
 import com.spirit.teresa.serializer.Serializer;
 import com.spirit.teresa.utils.ErrorCode;
@@ -23,11 +22,11 @@ public class ServerProcessor implements Processor<IoPacket,IoPacket> {
 
     @Override
     public IoPacket process(IoPacket packet, Channel ioChannel) {
-        MethodHandler methodHandler = methodHanlerMap.get(String.valueOf(packet.getSubcmd()));
-        //TODO: subcmd not find
+        MethodHandler methodHandler = methodHanlerMap.get(String.valueOf(packet.getSubCmd()));
+        //TODO: subCmd not find
         if (methodHandler == null) {
-            logger.error("not find methodHandler for subcmd {}",packet.getSubcmd());
-            throw new IllegalArgumentException("not find methodHandler for subcmd:" + packet.getSubcmd());
+            logger.error("not find methodHandler for subCmd {}",packet.getSubCmd());
+            throw new IllegalArgumentException("not find methodHandler for subCmd:" + packet.getSubCmd());
         }
 
         IoPacket rsp;

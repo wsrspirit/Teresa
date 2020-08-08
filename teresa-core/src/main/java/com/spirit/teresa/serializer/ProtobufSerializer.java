@@ -53,17 +53,6 @@ public class ProtobufSerializer implements Serializer {
         }
     }
 
-    @Override
-    public String serializeToString(Object obj) {
-        return null;
-    }
-
-    @Override
-    public <T> T deserializeFromString(Class<T> klass, String data) {
-        return null;
-    }
-
-
     private Schema getSchema(Class klass) {
         Schema schema = this.cachedSchemas.get(klass);
         if(schema == null) {

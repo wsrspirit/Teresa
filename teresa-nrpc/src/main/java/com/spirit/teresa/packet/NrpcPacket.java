@@ -192,14 +192,13 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
     }
 
     @Override
-    public Object getContent(Class clazz, Serializer serializer) {
-        return serializer.deserialize(clazz,body.toByteArray());
+    public void setBizContentBytes(byte[] bizContentBytes) {
+        this.body = ByteString.copyFrom(bizContentBytes);
     }
 
     @Override
-    public void setContent(Object content, Serializer serializer) {
-        this.content = content;
-        this.body = ByteString.copyFrom(serializer.serialize(content));
+    public byte[] getBizContentBytes() {
+        return body.toByteArray();
     }
 
 
@@ -214,22 +213,22 @@ public final class NrpcPacket extends AbstractIoPacket implements Externalizable
     }
 
     @Override
-    public Object getSubcmd() {
+    public Object getSubCmd() {
         return head.getServiceCmd();
     }
 
     @Override
-    public void setSubcmd(Object subcmd) {
-        head.setServiceCmd((String)subcmd);
+    public void setSubCmd(Object subCmd) {
+        head.setServiceCmd((String) subCmd);
     }
 
     @Override
-    public Long getSeq() {
+    public long getSeq() {
         return head.getSeq();
     }
 
     @Override
-    public void setSeq(Long seq) {
+    public void setSeq(long seq) {
         head.setSeq(seq);
     }
 

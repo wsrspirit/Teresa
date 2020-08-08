@@ -46,7 +46,7 @@
             <!--<map>-->
                 <!--<entry key="addExp">-->
                     <!--<map>-->
-                        <!--<entry key="subcmd" value="0x3"/>-->
+                        <!--<entry key="subCmd" value="0x3"/>-->
                         <!--<entry key="timeout" value="1000"/>-->
                     <!--</map>-->
                 <!--</entry>-->

@@ -21,7 +21,7 @@ public class MethodHandler {
     }
 
     public Object invoke(IoPacket packet, Serializer serializer) throws Exception {
-        Object req = packet.getContent(parameterType[0],serializer);
+        Object req = serializer.deserialize(parameterType[0],packet.getBizContentBytes());
         return method.invoke(object,req,packet);
     }
 

@@ -4,13 +4,23 @@ import com.spirit.teresa.serializer.Serializer;
 
 import java.net.InetSocketAddress;
 
+/**
+ * tcp层的包结构
+ * @param <T>
+ */
 public interface IoPacket<T extends IoPacket> {
 
-	Object getSeq();
+	long getSeq();
+
+	void setSeq(long seq);
 
 	Object getCmd();
 
-	Object getSubcmd();
+	void setCmd(Object cmd);
+
+	Object getSubCmd();
+
+	void setSubCmd(Object subCmd);
 
 	long getCreateTime();
 
@@ -20,27 +30,19 @@ public interface IoPacket<T extends IoPacket> {
 
 	void setRouterAddr(InetSocketAddress addr);
 
-	int getEstimateSize();
-
 	int getRetCode();
+
+	void setRetCode(int retCode);
 
 	String getErrMsg();
 
-	/**
-	 * fixme should not throw checked exception
-	 * @param reqPacket
-	 * @param ec
-	 * @param message
-	 * @param body
-	 * @param serializer
-	 * @return
-	 * @throws Exception
-	 */
+	void setErrMsg(String errMsg);
+
 	T newResponsePacket(T reqPacket, int ec, String message, Object body, Serializer serializer);
 
-	Object getContent(Class clazz, Serializer serializer);
+	void setBizContentBytes(byte[] bizContentBytes);
 
-	void setContent(Object content,Serializer serializer);
+	byte[] getBizContentBytes();
 
 	boolean isRequest();
 
