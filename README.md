@@ -1,9 +1,7 @@
 # Teresa
 ![Teresa](https://img.alicdn.com/tfs/TB1sgYxc9slXu8jSZFuXXXg7FXa-1078-602.jpg)
 
-基于Netty，Quasar，RxJava，PB，Spring实现的Java微服务框架。
-use netty + spring + protoStuff  + Quasar to create a rpc framework. 
-
+从0到1开发Java微服务框架，见微知著，麻雀虽小五脏俱全
 
 - 基于Netty。TCP、UDP上定义网络层数据协议
 - 基于Protobuf。包装RPC数据协议；使用ProtoStuff优化代码结构及编解码速度
@@ -14,4 +12,3 @@ use netty + spring + protoStuff  + Quasar to create a rpc framework.
 - 可靠。超时处理，过载保护，异常传递，地址可达检测，熔断保护
 - 拓展。RPC请求和响应的多个阶段留有充分的SPI接口
 - 运维。优雅上下线
-见微知著，麻雀虽小五脏俱全
